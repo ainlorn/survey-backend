@@ -2,10 +2,9 @@ package com.midgetspinner31.survey.service.impl;
 
 import com.midgetspinner31.survey.db.dao.SurveyRepository;
 import com.midgetspinner31.survey.db.entity.Question;
-import com.midgetspinner31.survey.db.entity.Restrictions;
 import com.midgetspinner31.survey.db.entity.Survey;
-import com.midgetspinner31.survey.dto.RestrictionsInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
+import com.midgetspinner31.survey.factory.SurveyFactory;
 import com.midgetspinner31.survey.service.SurveyService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ import java.util.List;
 public class SurveyServiceImpl implements SurveyService {
 
     SurveyRepository surveyRepository;
+    SurveyFactory surveyFactory;
 
     @Override
     public SurveyInfo getSurvey(String id) {
@@ -31,33 +31,8 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public SurveyInfo saveSurvey(SurveyInfo surveyInfo) {
-        //TODO: delegate survey building to factory
-        List<Question> questions = surveyInfo.getQuestions().stream()
-                .map(qInfo -> {
-                    RestrictionsInfo restrictionsInfo = qInfo.getRestrictions();
-                    Restrictions restrictions = Restrictions.builder()
-                            .min(restrictionsInfo.getMin())
-                            .max(restrictionsInfo.getMax())
-                            .maxLength(restrictionsInfo.getMaxLength())
-                            .choices(restrictionsInfo.getChoices())
-                            .build();
-
-                    return Question.builder()
-                            .text(qInfo.getText())
-                            .required(qInfo.getRequired())
-                            .answerType(qInfo.getAnswerType())
-                            .restrictions(restrictions)
-                            .build();
-
-                }).toList();
-        Survey survey = Survey.builder()
-                .name(surveyInfo.getName())
-                .description(surveyInfo.getDescription())
-                .surveyTopics(surveyInfo.getSurveyTopics())
-                .creatorId(surveyInfo.getCreatorId())
-                .creationDate(surveyInfo.getCreationDate())
-                .questions(questions)
-                .build();
+        List<Question> questions = surveyFactory.createQuestionsFrom(surveyInfo.getQuestions());
+        Survey survey = surveyFactory.createSurveyFrom(surveyInfo, questions);
 
         return surveyRepository.save(survey).toSurveyInfo();
     }
