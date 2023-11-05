@@ -40,9 +40,9 @@ public class M003_InitSurvey {
                                                                 JsonSchemaProperty.int32("max_length"),
                                                                 JsonSchemaProperty.array("choices")
                                                                         .items(JsonSchemaObject.string())
-                                                                )
-                                                ).required("text", "required", "answer_type")
-                                        )
+                                                               // TODO: constraints
+                                                               ).required()
+                                                ).required("text", "required", "answer_type"))
                         ).required("name", "survey_topics", "creator_id", "creation_date")
                         .build())));
     }
