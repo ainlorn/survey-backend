@@ -15,5 +15,7 @@ public class QuestionInfo {
     Boolean required;
     @JsonProperty("answer_type")
     AnswerType answerType;
-    RestrictionsInfo restrictions;
+
+    @JsonProperty("restrictions")
+    RestrictionsInfo restrictionsInfo;
 }
