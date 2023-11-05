@@ -31,6 +31,14 @@ public class SurveyFactory {
                 .build();
     }
 
+    public List<Question> createQuestionsFrom(List<QuestionInfo> questionInfos) {
+        return questionInfos.stream()
+                .map(questionInfo -> {
+                    Restrictions restrictions = createRestrictionsFrom(questionInfo.getRestrictionsInfo());
+                    return createQuestionFrom(questionInfo, restrictions);
+                }).toList();
+    }
+
     public Restrictions createRestrictionsFrom(RestrictionsInfo restrictionsInfo) {
         return Restrictions.builder()
                 .min(restrictionsInfo.getMin())
