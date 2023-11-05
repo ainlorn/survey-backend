@@ -1,11 +1,11 @@
 package com.midgetspinner31.survey.db.entity;
 
 import com.midgetspinner31.survey.dto.SurveyInfo;
-import io.mongock.utils.field.Field;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 import java.util.List;

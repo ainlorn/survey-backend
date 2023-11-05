@@ -1,5 +1,7 @@
 package com.midgetspinner31.survey.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.midgetspinner31.survey.enumerable.AnswerType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class QuestionInfo {
     String text;
     Boolean required;
-    String answerType;
+    @JsonProperty("answer_type")
+    AnswerType answerType;
     RestrictionsInfo restrictions;
 }
