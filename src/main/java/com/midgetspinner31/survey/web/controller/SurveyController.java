@@ -8,10 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @SurveyApiV1
 @RequiredArgsConstructor
@@ -19,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SurveyController {
     SurveyService surveyService;
 
-    @PostMapping("/save")
+    @PostMapping("/surveys")
     public SurveyResponse saveSurvey(@RequestBody SurveyRequest surveyRequest) {
         return new SurveyResponse(surveyService.saveSurvey(surveyRequest.getSurveyInfo()));
     }
-    @GetMapping("/get")
+    @GetMapping("/surveys")
     public SurveyResponse getSurvey(@RequestParam String surveyId) {
         return new SurveyResponse(surveyService.getSurvey(surveyId));
     }
-    @PostMapping("/delete")
+    @DeleteMapping("/surveys")
     public ResponseEntity<String> deleteSurvey(@RequestParam String surveyId) {
         return ResponseEntity.ok(surveyService.deleteSurvey(surveyId));
     }
