@@ -6,6 +6,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Вопрос
+ */
 @Getter
 @Setter
 @Builder
@@ -13,11 +16,25 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Question {
-    // TODO: переделать схему. В Question не должно быть поле question
+
+    /**
+     * Текст вопроса
+     */
     String text;
+    /**
+     * Обязательный вопрос
+     */
     Boolean required;
+
+    /**
+     * Тип ответа
+     */
     @Field("answer_type")
     AnswerType answerType;
+
+    /**
+     * Ограничения на ответ
+     */
     Restrictions restrictions;
 
     public QuestionInfo toQuestionInfo() {
