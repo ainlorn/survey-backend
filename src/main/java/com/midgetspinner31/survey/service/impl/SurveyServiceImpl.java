@@ -6,6 +6,7 @@ import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.factory.SurveyFactory;
 import com.midgetspinner31.survey.service.SurveyService;
+import com.midgetspinner31.survey.web.request.SurveyRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,15 +31,23 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public SurveyInfo saveSurvey(SurveyInfo surveyInfo) {
+    public SurveyInfo saveSurvey(SurveyRequest surveyRequest) {
+        SurveyInfo surveyInfo = surveyFactory.createSurveyInfoFrom(surveyRequest);
         List<Question> questions = surveyFactory.createQuestionsFrom(surveyInfo.getQuestions());
         Survey survey = surveyFactory.createSurveyFrom(surveyInfo, questions);
-
-        return surveyRepository.save(survey).toSurveyInfo();
+        surveyRepository.save(survey);
+        return surveyInfo;
     }
 
     @Override
     public String deleteSurvey(String id) {
         return "Ok";
+    }
+
+    @Override
+    public List<SurveyInfo> getSurveyList() {
+        return surveyRepository.findAll().stream()
+                .map(Survey::toSurveyInfo)
+                .toList();
     }
 }

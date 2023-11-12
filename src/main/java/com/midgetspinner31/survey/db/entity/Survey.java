@@ -43,12 +43,14 @@ public class Survey {
     /**
      * id создателя опроса
      */
+    //TODO: брать из сессии
     @Field("creator_id")
     String creatorId;
 
     /**
      * Дата создания опроса
      */
+    //TODO: создавать при сохранении
     @Field("creation_date")
     Date creationDate;
 

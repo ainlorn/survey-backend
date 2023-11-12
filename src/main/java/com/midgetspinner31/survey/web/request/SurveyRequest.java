@@ -1,9 +1,20 @@
 package com.midgetspinner31.survey.web.request;
 
-import com.midgetspinner31.survey.dto.SurveyInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.midgetspinner31.survey.dto.QuestionInfo;
 import lombok.Value;
+
+import java.util.List;
 
 @Value
 public class SurveyRequest {
-    SurveyInfo surveyInfo;
+    String name;
+    String description;
+    @JsonProperty("survey_topics")
+    List<String> surveyTopics;
+
+    //TODO: брать из сессии
+    @JsonProperty("creator_id")
+    String creatorId;
+    List<QuestionInfo> questions;
 }
