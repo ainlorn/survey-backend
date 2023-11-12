@@ -58,6 +58,7 @@ public class SurveyAnswerFactory {
 
 
     public SurveyAnswerInfo createSurveyAnswerInfoFrom(SurveyAnswerRequest surveyAnswerRequest) {
+
         return new SurveyAnswerInfo(
                 surveyAnswerRequest.getSurveyId(),
                 new Date(),

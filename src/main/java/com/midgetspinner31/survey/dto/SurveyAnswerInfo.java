@@ -1,6 +1,7 @@
 package com.midgetspinner31.survey.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SurveyAnswerInfo {
-
     @JsonProperty("survey_id")
     String surveyId;
 
@@ -27,5 +27,7 @@ public class SurveyAnswerInfo {
 
     @JsonProperty("polling_time")
     Integer pollingTime;
+
+    @Valid
     List<QuestionAnswerInfo> answers;
 }

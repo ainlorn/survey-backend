@@ -2,6 +2,7 @@ package com.midgetspinner31.survey.web.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.midgetspinner31.survey.dto.QuestionAnswerInfo;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,7 @@ public class SurveyAnswerRequest {
 
     @JsonProperty("polling_time")
     Integer pollingTime;
+
+    @Valid
     List<QuestionAnswerInfo> answers;
 }

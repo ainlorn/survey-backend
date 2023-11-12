@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -27,7 +28,7 @@ public class SurveyServiceImpl implements SurveyService {
     @Override
     public SurveyInfo getSurvey(String id) {
         // TODO: exception
-        return surveyRepository.findById(id).orElseThrow().toSurveyInfo();
+        return surveyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Опрос не найден")).toSurveyInfo();
     }
 
     @Override
