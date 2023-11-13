@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RestrictionsInfo {
-    Double min;
-    Double max;
+    Integer min;
+    Integer max;
     Integer maxLength;
     List<String> choices;
 }

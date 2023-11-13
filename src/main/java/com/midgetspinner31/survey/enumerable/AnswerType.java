@@ -1,11 +1,19 @@
 package com.midgetspinner31.survey.enumerable;
 
-// TODO: вопрос:
-// Если сделаем enum по правильному (uppercase) - будем ли переделывать схему,
-// чтобы в теле запроса тоже передавалась строка с верхним регистром?
+import com.midgetspinner31.survey.db.entity.answers.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@AllArgsConstructor
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum AnswerType {
-    text,
-    single_choice,
-    multiple_choice,
-    slider
+    text(TextAnswer.class),
+    single_choice(SingleChoiceAnswer.class),
+    multiple_choice(MultipleChoiceAnswer.class),
+    slider(SliderAnswer.class);
+
+    Class<? extends QuestionAnswer> answerClass;
 }

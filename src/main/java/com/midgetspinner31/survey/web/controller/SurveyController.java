@@ -1,34 +1,82 @@
 package com.midgetspinner31.survey.web.controller;
 
+import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
+import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
+import com.midgetspinner31.survey.web.response.SurveyAnswerResponse;
 import com.midgetspinner31.survey.web.response.SurveyResponse;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.naming.SizeLimitExceededException;
+import java.util.List;
 
 @SurveyApiV1
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SurveyController {
     SurveyService surveyService;
+    SurveyAnswerService surveyAnswerService;
 
-    @PostMapping("/save")
+    /**
+     * Cохранить опрос
+     */
+    @PostMapping("/surveys")
     public SurveyResponse saveSurvey(@RequestBody SurveyRequest surveyRequest) {
-        return new SurveyResponse(surveyService.saveSurvey(surveyRequest.getSurveyInfo()));
+        return new SurveyResponse(surveyService.saveSurvey(surveyRequest));
     }
-    @GetMapping("/get")
-    public SurveyResponse getSurvey(@RequestParam String surveyId) {
+
+    /**
+     * Получить информацию об опросе
+     * @param surveyId id опроса
+     */
+    @GetMapping("/surveys/{surveyId}")
+    public SurveyResponse getSurvey(@PathVariable String surveyId) {
         return new SurveyResponse(surveyService.getSurvey(surveyId));
     }
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteSurvey(@RequestParam String surveyId) {
+
+    /**
+     * Получить список доступных опросов
+     */
+    @GetMapping("/surveys")
+    public List<SurveyResponse> getSurveyList() {
+        return surveyService.getSurveyList().stream()
+                .map(SurveyResponse::new)
+                .toList();
+    }
+
+    /**
+     * Удалить опрос
+     * @param surveyId id опроса
+     */
+    @DeleteMapping("/surveys/{surveyId}")
+    public ResponseEntity<String> deleteSurvey(@PathVariable String surveyId) {
         return ResponseEntity.ok(surveyService.deleteSurvey(surveyId));
+    }
+
+    /**
+     * Отправить ответ на опрос
+     * @param surveyId id опроса
+     */
+    @PostMapping("/surveys/{surveyId}/answers")
+    public SurveyAnswerResponse saveSurveyAnswer(@PathVariable String surveyId,
+                                                 @RequestBody @Valid SurveyAnswerRequest surveyAnswerRequest) {
+        return new SurveyAnswerResponse(surveyAnswerService.saveSurveyAnswer(surveyId, surveyAnswerRequest));
+    }
+
+    /**
+     * Получить информацию об ответе на опрос
+     * @param surveyId id опроса
+     * @param answerId id ответа
+     */
+    @GetMapping("/surveys/{surveyId}/answers/{answerId}")
+    public SurveyAnswerResponse getSurveyAnswer(@PathVariable String surveyId, @PathVariable String answerId) {
+        return new SurveyAnswerResponse(surveyAnswerService.getSurveyAnswer(surveyId, answerId));
     }
 }

@@ -1,6 +1,7 @@
 package com.midgetspinner31.survey.db.migration;
 
 import com.midgetspinner31.survey.db.entity.Survey;
+import com.midgetspinner31.survey.db.entity.SurveyDraft;
 import io.mongock.api.annotations.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +13,15 @@ import org.springframework.data.mongodb.core.schema.JsonSchemaProperty;
 import org.springframework.data.mongodb.core.schema.MongoJsonSchema;
 import org.springframework.data.mongodb.core.validation.Validator;
 
-@ChangeUnit(id = "init-survey", order = "003", author = "sosmunk")
+@ChangeUnit(id = "init-survey-draft", order = "004", author = "sosmunk")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class M003_InitSurvey {
+public class M004_InitSurveyDraft {
     MongoTemplate mongoTemplate;
 
     @BeforeExecution
     public void before() {
-        mongoTemplate.createCollection(Survey.class, CollectionOptions.empty()
+        mongoTemplate.createCollection(SurveyDraft.class, CollectionOptions.empty()
                 .validator(Validator.schema(MongoJsonSchema.builder()
                         .properties(
                                 JsonSchemaProperty.string("name"),
@@ -50,7 +51,7 @@ public class M003_InitSurvey {
 
     @RollbackBeforeExecution
     public void rollbackBefore() {
-        mongoTemplate.dropCollection(Survey.class);
+        mongoTemplate.dropCollection(SurveyDraft.class);
     }
 
     @Execution
