@@ -1,5 +1,12 @@
 package com.midgetspinner31.survey.db.entity.answers;
 
-public class SliderAnswer extends Answer {
-    Integer sliderValue;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class SliderAnswer extends QuestionAnswer {
+    @NotNull
+    Integer value;
 }

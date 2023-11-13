@@ -7,9 +7,9 @@ import javax.naming.SizeLimitExceededException;
 import java.util.List;
 
 public interface SurveyAnswerService {
-    SurveyAnswerInfo saveSurveyAnswer(SurveyAnswerRequest surveyAnswerRequest) throws SizeLimitExceededException;
+    SurveyAnswerInfo saveSurveyAnswer(String surveyId, SurveyAnswerRequest surveyAnswerRequest);
 
-    SurveyAnswerInfo getSurveyAnswer(String id);
+    SurveyAnswerInfo getSurveyAnswer(String surveyId, String answerId);
 
     List<SurveyAnswerInfo> getSurveyAnswersBySurveyId(String surveyId);
 }

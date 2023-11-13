@@ -38,6 +38,7 @@ public class SurveyDraft {
     //TODO: Вынести функционал to<T>Info в фабрику (create<T>from)
     public SurveyInfo toSurveyInfo() {
         return new SurveyInfo(
+                id,
                 name,
                 description,
                 surveyTopics,

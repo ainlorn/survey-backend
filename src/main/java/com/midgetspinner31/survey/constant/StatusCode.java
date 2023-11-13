@@ -22,7 +22,12 @@ public enum StatusCode {
     EMAIL_IN_USE(100, 400, "Адрес электронной почты уже используется"),
     PHONE_IN_USE(101, 400, "Номер телефона уже используется"),
     WRONG_CREDENTIALS(102, 400, "Неправильный логин или пароль"),
-    USER_NOT_FOUND(103, 404, "Пользователь не найден");
+    USER_NOT_FOUND(103, 404, "Пользователь не найден"),
+
+    // survey
+    SURVEY_NOT_FOUND(200, 404, "Опрос не найден"),
+    SURVEY_ANSWER_VALIDATION_ERROR(201, 400, "Неверный формат ответа на опрос"),
+    SURVEY_ANSWER_NOT_FOUND(202, 404, "Ответ на опрос не найден");
 
     int code;
     int httpCode;

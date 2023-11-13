@@ -12,9 +12,5 @@ public class SurveyRequest {
     String description;
     @JsonProperty("survey_topics")
     List<String> surveyTopics;
-
-    //TODO: брать из сессии
-    @JsonProperty("creator_id")
-    String creatorId;
     List<QuestionInfo> questions;
 }

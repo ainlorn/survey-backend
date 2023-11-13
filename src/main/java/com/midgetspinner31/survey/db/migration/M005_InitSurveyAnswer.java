@@ -26,9 +26,7 @@ public class M005_InitSurveyAnswer {
                                 JsonSchemaProperty.string("survey_id"),
                                 JsonSchemaProperty.int32("polling_time"),
                                 JsonSchemaProperty.array("answers")
-                                        .items(JsonSchemaObject.object().properties(
-                                                JsonSchemaProperty.object("answer")
-                                        ).required("answer"))
+                                        .items(JsonSchemaObject.object(), JsonSchemaObject.nil())
                         ).required("survey_id", "polling_time", "answers")
                         .build())));
     }

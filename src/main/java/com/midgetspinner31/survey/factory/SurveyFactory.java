@@ -50,14 +50,27 @@ public class SurveyFactory {
                 .build();
     }
 
-    public SurveyInfo createSurveyInfoFrom(SurveyRequest surveyRequest) {
+    public SurveyInfo createSurveyInfoFrom(String creatorId, SurveyRequest surveyRequest) {
         return new SurveyInfo(
+                null,
                 surveyRequest.getName(),
                 surveyRequest.getDescription(),
                 surveyRequest.getSurveyTopics(),
-                surveyRequest.getCreatorId(),
+                creatorId,
                 new Date(),
                 surveyRequest.getQuestions()
+        );
+    }
+
+    public SurveyInfo createSurveyInfoFrom(Survey survey) {
+        return new SurveyInfo(
+                survey.getId(),
+                survey.getName(),
+                survey.getDescription(),
+                survey.getSurveyTopics(),
+                survey.getCreatorId(),
+                survey.getCreationDate(),
+                survey.getQuestions().stream().map(Question::toQuestionInfo).toList()
         );
     }
 }

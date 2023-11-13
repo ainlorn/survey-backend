@@ -1,5 +1,10 @@
 package com.midgetspinner31.survey.db.entity.answers;
 
-public class SingleChoiceAnswer extends Answer {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class SingleChoiceAnswer extends QuestionAnswer {
     Integer choice;
 }

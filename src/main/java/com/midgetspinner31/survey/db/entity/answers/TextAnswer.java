@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TextAnswer extends Answer {
+public class TextAnswer extends QuestionAnswer {
     private String text;
-
 }

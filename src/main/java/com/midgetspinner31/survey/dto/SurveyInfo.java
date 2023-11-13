@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SurveyInfo {
-    // TODO: Валидация
+    String id;
+
     String name;
     String description;
     @JsonProperty("survey_topics")

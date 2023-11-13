@@ -58,16 +58,4 @@ public class Survey {
      * Список вопросов
      */
     List<Question> questions;
-
-    //TODO: Вынести функционал to<T>Info в фабрику (create<T>from)
-    public SurveyInfo toSurveyInfo() {
-        return new SurveyInfo(
-                name,
-                description,
-                surveyTopics,
-                creatorId,
-                creationDate,
-                questions.stream().map(Question::toQuestionInfo).toList()
-        );
-    }
 }

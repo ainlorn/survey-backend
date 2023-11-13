@@ -1,5 +1,6 @@
 package com.midgetspinner31.survey.db.entity;
 
+import com.midgetspinner31.survey.db.entity.answers.QuestionAnswer;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;

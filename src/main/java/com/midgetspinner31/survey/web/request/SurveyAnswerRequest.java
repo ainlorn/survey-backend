@@ -1,8 +1,8 @@
 package com.midgetspinner31.survey.web.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.midgetspinner31.survey.dto.QuestionAnswerInfo;
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.midgetspinner31.survey.db.entity.answers.QuestionAnswer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,16 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SurveyAnswerRequest {
-    @JsonProperty("survey_id")
-    String surveyId;
-
-    //TODO: брать id из сессии
-    @JsonProperty("respondent_id")
-    String respondentId;
-
     @JsonProperty("polling_time")
     Integer pollingTime;
 
-    @Valid
-    List<QuestionAnswerInfo> answers;
+    List<JsonNode> answers;
 }
