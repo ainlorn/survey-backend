@@ -36,7 +36,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public SurveyInfo saveSurvey(SurveyRequest surveyRequest) {
         User user = userRepository.getCurrentUser();
         SurveyInfo surveyInfo = surveyFactory.createSurveyInfoFrom(user.getId(), surveyRequest);
