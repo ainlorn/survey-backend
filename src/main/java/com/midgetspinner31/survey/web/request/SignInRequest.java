@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignInRequest {
+public class SignInRequest extends BaseRequest {
     /**
      * Адрес электронной почты или номер телефона
      */
@@ -24,7 +24,7 @@ public class SignInRequest {
     String password;
 
     public void setUsername(String username) {
-        this.username = username.strip();
+        this.username = trim(username);
     }
 
     public void setPassword(String password) {
