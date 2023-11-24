@@ -4,7 +4,8 @@ import com.midgetspinner31.survey.constant.StatusCode;
 import com.midgetspinner31.survey.service.UserService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.request.SignInRequest;
-import com.midgetspinner31.survey.web.request.SignUpRequest;
+import com.midgetspinner31.survey.web.request.RespondentSignUpRequest;
+import com.midgetspinner31.survey.web.request.SurveyCreatorSignUpRequest;
 import com.midgetspinner31.survey.web.response.BaseResponse;
 import com.midgetspinner31.survey.web.response.EmptyResponse;
 import com.midgetspinner31.survey.web.response.ErrorResponse;
@@ -41,7 +42,15 @@ public class UserAccountController {
      * Зарегистрировать аккаунт пользователя
      */
     @PostMapping("/register")
-    public UserInfoResponse register(@Valid @RequestBody SignUpRequest request) {
+    public UserInfoResponse register(@Valid @RequestBody RespondentSignUpRequest request) {
+        return new UserInfoResponse(userService.signUp(request.toUserSignUpInfo()));
+    }
+
+    /**
+     * Зарегистрировать аккаунт создателя опросов
+     */
+    @PostMapping("/register_creator")
+    public UserInfoResponse registerCreator(@Valid @RequestBody SurveyCreatorSignUpRequest request) {
         return new UserInfoResponse(userService.signUp(request.toUserSignUpInfo()));
     }
 
