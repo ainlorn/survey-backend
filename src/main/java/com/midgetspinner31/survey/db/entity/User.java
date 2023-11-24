@@ -1,6 +1,8 @@
 package com.midgetspinner31.survey.db.entity;
 
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalUserDetails;
 import com.midgetspinner31.survey.dto.UserInfo;
+import com.midgetspinner31.survey.enumerable.AccountType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -17,9 +19,7 @@ public class User {
     @Id
     String id;
 
-    String firstName;
-
-    String lastName;
+    AccountType accountType;
 
     String email;
 
@@ -27,13 +27,5 @@ public class User {
 
     String password;
 
-    public UserInfo toUserInfo() {
-        return new UserInfo(
-                id,
-                firstName,
-                lastName,
-                email,
-                phoneNumber
-        );
-    }
+    AdditionalUserDetails additionalDetails;
 }

@@ -36,7 +36,7 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     SurveyService surveyService;
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@respondentService.isRespondent()")
     public SurveyAnswerInfo saveSurveyAnswer(String surveyId, SurveyAnswerRequest surveyAnswerRequest) {
         User user = userRepository.getCurrentUser();
         SurveyInfo surveyInfo = surveyService.getSurvey(surveyId);
@@ -108,8 +108,8 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     }
 
     @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public SurveyAnswerInfo getSurveyAnswer(String surveyId, String answerId) {
-        // TODO добавить проверку что пользователь является владельцем опроса
         SurveyAnswer answer = surveyAnswerRepository.findById(answerId)
                 .orElseThrow(SurveyAnswerNotFoundException::new);
         if (!Objects.equals(answer.getSurveyId(), surveyId))
@@ -119,6 +119,7 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     }
 
     @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public List<SurveyAnswerInfo> getSurveyAnswersBySurveyId(String surveyId) {
         return surveyAnswerRepository.findAllBySurveyId(surveyId).stream()
                 .map(surveyAnswerFactory::createSurveyAnswerInfoFrom)
