@@ -13,12 +13,13 @@ import com.midgetspinner31.survey.web.request.SurveyRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -56,5 +57,10 @@ public class SurveyServiceImpl implements SurveyService {
         return surveyRepository.findAll().stream()
                 .map(surveyFactory::createSurveyInfoFrom)
                 .toList();
+    }
+
+    public Page<SurveyInfo> getSurveyPage(Integer page, Integer size) {
+        return surveyRepository.findAll(PageRequest.of(page, size))
+                .map(surveyFactory::createSurveyInfoFrom);
     }
 }
