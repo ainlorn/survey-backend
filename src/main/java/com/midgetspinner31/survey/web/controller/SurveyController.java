@@ -57,9 +57,12 @@ public class SurveyController {
     @GetMapping("/surveys/page")
     public Page<SurveyResponse> getSurveyListPage(
             @RequestParam @Min(0) Integer offset,
-            @RequestParam @Min(1) @Max(100) Integer limit) {
+            @RequestParam @Min(1) @Max(100) Integer limit,
+            @RequestParam(name = "topic", required = false) List<String> topics) {
 
-        return surveyService.getSurveyPage(offset, limit).map(SurveyResponse::new);
+        System.out.println(topics);
+
+        return surveyService.getSurveyPage(offset, limit, topics).map(SurveyResponse::new);
     }
 
     /**

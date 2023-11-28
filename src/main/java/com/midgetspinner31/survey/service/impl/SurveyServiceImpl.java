@@ -59,8 +59,13 @@ public class SurveyServiceImpl implements SurveyService {
                 .toList();
     }
 
-    public Page<SurveyInfo> getSurveyPage(Integer page, Integer size) {
-        return surveyRepository.findAll(PageRequest.of(page, size))
+    public Page<SurveyInfo> getSurveyPage(Integer page, Integer size, List<String> topics) {
+        if (topics == null) {
+            return surveyRepository.findAll(PageRequest.of(page, size))
+                    .map(surveyFactory::createSurveyInfoFrom);
+        }
+
+        return surveyRepository.findBySurveyTopicsIn(topics, PageRequest.of(page, size))
                 .map(surveyFactory::createSurveyInfoFrom);
     }
 }
