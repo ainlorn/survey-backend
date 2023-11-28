@@ -49,6 +49,7 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public String deleteSurvey(String id) {
+        surveyRepository.deleteById(id);
         return "Ok";
     }
 
