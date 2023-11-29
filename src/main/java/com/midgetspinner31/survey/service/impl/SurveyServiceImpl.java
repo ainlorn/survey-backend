@@ -57,4 +57,14 @@ public class SurveyServiceImpl implements SurveyService {
                 .map(surveyFactory::createSurveyInfoFrom)
                 .toList();
     }
+
+    @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
+    public List<SurveyInfo> getSurveysCreatedByCurrentUser() {
+        return surveyRepository
+                .findAllByCreatorId(userRepository.getCurrentUser().getId())
+                .stream()
+                .map(surveyFactory::createSurveyInfoFrom)
+                .toList();
+    }
 }

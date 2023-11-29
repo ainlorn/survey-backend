@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.midgetspinner31.survey.db.entity.SurveyAnswer;
 import com.midgetspinner31.survey.db.entity.answers.QuestionAnswer;
 import com.midgetspinner31.survey.dto.SurveyAnswerInfo;
+import com.midgetspinner31.survey.dto.SurveyAnswerShortInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.exception.SurveyAnswerValidationException;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
@@ -37,6 +38,16 @@ public class SurveyAnswerFactory {
                 surveyAnswer.getRespondentId(),
                 surveyAnswer.getPollingTime(),
                 surveyAnswer.getAnswers());
+    }
+
+    public SurveyAnswerShortInfo createSurveyAnswerShortInfoFrom(SurveyAnswer surveyAnswer) {
+        return new SurveyAnswerShortInfo(
+                surveyAnswer.getSurveyId(),
+                surveyAnswer.getId(),
+                surveyAnswer.getAnsweredAt(),
+                surveyAnswer.getRespondentId(),
+                surveyAnswer.getPollingTime()
+        );
     }
 
     public SurveyAnswerInfo createSurveyAnswerInfoFrom(String respondentId,
