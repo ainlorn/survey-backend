@@ -5,6 +5,7 @@ import com.midgetspinner31.survey.db.entity.Restrictions;
 import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.dto.QuestionInfo;
 import com.midgetspinner31.survey.dto.RestrictionsInfo;
+import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
 import org.springframework.stereotype.Component;
@@ -60,6 +61,18 @@ public class SurveyFactory {
                 new Date(),
                 surveyRequest.getQuestions()
         );
+    }
+
+    public Survey createSurveyFrom(SurveyDraftInfo surveyDraftInfo) {
+        return Survey.builder()
+                .name(surveyDraftInfo.getName())
+                .description(surveyDraftInfo.getDescription())
+                .surveyTopics(surveyDraftInfo.getSurveyTopics())
+                .creatorId(surveyDraftInfo.getCreatorId())
+                .surveyTopics(surveyDraftInfo.getSurveyTopics())
+                .creationDate(new Date())
+                .questions(createQuestionsFrom(surveyDraftInfo.getQuestions()))
+                .build();
     }
 
     public SurveyInfo createSurveyInfoFrom(Survey survey) {

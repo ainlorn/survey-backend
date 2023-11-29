@@ -6,8 +6,10 @@ import com.midgetspinner31.survey.db.entity.SurveyDraft;
 import com.midgetspinner31.survey.dto.QuestionInfo;
 import com.midgetspinner31.survey.dto.RestrictionsInfo;
 import com.midgetspinner31.survey.dto.SurveyDraftInfo;
+import com.midgetspinner31.survey.web.request.SurveyRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -47,5 +49,29 @@ public class SurveyDraftFactory {
                 .maxLength(restrictionsInfo.getMaxLength())
                 .choices(restrictionsInfo.getChoices())
                 .build();
+    }
+
+    public SurveyDraftInfo createSurveyDraftInfoFrom(String creatorId, SurveyRequest surveyRequest) {
+        return new SurveyDraftInfo(
+                null,
+                surveyRequest.getName(),
+                surveyRequest.getDescription(),
+                surveyRequest.getSurveyTopics(),
+                creatorId,
+                new Date(),
+                surveyRequest.getQuestions()
+        );
+    }
+
+    public SurveyDraftInfo createSurveyDraftInfoFrom(SurveyDraft surveyDraft) {
+        return new SurveyDraftInfo(
+                surveyDraft.getId(),
+                surveyDraft.getName(),
+                surveyDraft.getDescription(),
+                surveyDraft.getSurveyTopics(),
+                surveyDraft.getCreatorId(),
+                new Date(),
+                surveyDraft.getQuestions().stream().map(Question::toQuestionInfo).toList()
+        );
     }
 }

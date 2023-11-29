@@ -1,6 +1,5 @@
 package com.midgetspinner31.survey.db.entity;
 
-import com.midgetspinner31.survey.dto.SurveyInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -40,17 +39,11 @@ public class Survey {
     @Field("survey_topics")
     List<String> surveyTopics;
 
-    /**
-     * id создателя опроса
-     */
-    //TODO: брать из сессии
+
     @Field("creator_id")
     String creatorId;
 
-    /**
-     * Дата создания опроса
-     */
-    //TODO: создавать при сохранении
+
     @Field("creation_date")
     Date creationDate;
 

@@ -1,6 +1,6 @@
 package com.midgetspinner31.survey.db.entity;
 
-import com.midgetspinner31.survey.dto.SurveyInfo;
+import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
@@ -35,9 +35,8 @@ public class SurveyDraft {
 
     List<Question> questions;
 
-    //TODO: Вынести функционал to<T>Info в фабрику (create<T>from)
-    public SurveyInfo toSurveyInfo() {
-        return new SurveyInfo(
+    public SurveyDraftInfo toSurveyDraftInfo() {
+        return new SurveyDraftInfo(
                 id,
                 name,
                 description,

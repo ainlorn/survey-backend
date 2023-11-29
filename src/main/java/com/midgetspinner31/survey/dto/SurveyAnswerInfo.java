@@ -2,7 +2,6 @@ package com.midgetspinner31.survey.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.midgetspinner31.survey.db.entity.answers.QuestionAnswer;
-import jakarta.validation.Valid;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

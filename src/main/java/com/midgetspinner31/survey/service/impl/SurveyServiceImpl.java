@@ -5,6 +5,7 @@ import com.midgetspinner31.survey.db.dao.UserRepository;
 import com.midgetspinner31.survey.db.entity.Question;
 import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.db.entity.User;
+import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.exception.SurveyNotFoundException;
 import com.midgetspinner31.survey.factory.SurveyFactory;
@@ -44,6 +45,13 @@ public class SurveyServiceImpl implements SurveyService {
         List<Question> questions = surveyFactory.createQuestionsFrom(surveyInfo.getQuestions());
         Survey survey = surveyFactory.createSurveyFrom(surveyInfo, questions);
         survey = surveyRepository.save(survey);
+        return surveyFactory.createSurveyInfoFrom(survey);
+    }
+
+    @Override
+    public SurveyInfo saveSurvey(SurveyDraftInfo surveyDraftInfo) {
+        Survey survey = surveyFactory.createSurveyFrom(surveyDraftInfo);
+        surveyRepository.save(survey);
         return surveyFactory.createSurveyInfoFrom(survey);
     }
 
