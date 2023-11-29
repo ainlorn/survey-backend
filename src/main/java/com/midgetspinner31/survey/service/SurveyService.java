@@ -13,4 +13,6 @@ public interface SurveyService {
     String deleteSurvey(String id);
 
     List<SurveyInfo> getSurveyList();
+
+    List<SurveyInfo> getSurveysCreatedByCurrentUser();
 }

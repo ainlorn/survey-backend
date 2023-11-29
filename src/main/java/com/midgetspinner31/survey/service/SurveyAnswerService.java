@@ -1,6 +1,8 @@
 package com.midgetspinner31.survey.service;
 
 import com.midgetspinner31.survey.dto.SurveyAnswerInfo;
+import com.midgetspinner31.survey.dto.SurveyAnswerShortInfo;
+import com.midgetspinner31.survey.dto.SurveySingleAnswerInfo;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 
 import javax.naming.SizeLimitExceededException;
@@ -11,5 +13,7 @@ public interface SurveyAnswerService {
 
     SurveyAnswerInfo getSurveyAnswer(String surveyId, String answerId);
 
-    List<SurveyAnswerInfo> getSurveyAnswersBySurveyId(String surveyId);
+    List<SurveyAnswerShortInfo> getSurveyAnswersBySurveyId(String surveyId);
+
+    List<SurveySingleAnswerInfo> getSurveySingleQuestionAnswers(String surveyId, int questionId);
 }
