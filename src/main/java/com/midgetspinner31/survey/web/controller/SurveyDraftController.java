@@ -20,17 +20,30 @@ public class SurveyDraftController {
 
     SurveyService surveyService;
     SurveyDraftService surveyDraftService;
-    
+
+    /**
+     * Сохранить черновик опроса
+     */
     @PostMapping("/draft")
     public SurveyDraftResponse saveSurveyDraft(@RequestBody SurveyRequest surveyRequest) {
         return new SurveyDraftResponse(surveyDraftService.saveSurveyDraft(surveyRequest));
     }
 
+    /**
+     * Получить черновик опроса
+     *
+     * @param draftId id черновика
+     */
     @GetMapping("/draft/{draftId}")
-    public SurveyDraftResponse getSurvey(@PathVariable String draftId) {
+    public SurveyDraftResponse getSurveyDraft(@PathVariable String draftId) {
         return new SurveyDraftResponse(surveyDraftService.getSurveyDraft(draftId));
     }
 
+    /**
+     * Превратить черновик в готовый опрос
+     *
+     * @param draftId id черновика
+     */
     @PatchMapping("/draft/{draftId}")
     public SurveyResponse convertDraftToSurvey(@PathVariable String draftId) {
         SurveyDraftInfo draft = surveyDraftService.getSurveyDraft(draftId);
