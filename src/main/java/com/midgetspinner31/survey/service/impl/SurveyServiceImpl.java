@@ -38,7 +38,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public SurveyInfo saveSurvey(SurveyRequest surveyRequest) {
         User user = userRepository.getCurrentUser();
         SurveyInfo surveyInfo = surveyFactory.createSurveyInfoFrom(user.getId(), surveyRequest);
@@ -76,5 +76,15 @@ public class SurveyServiceImpl implements SurveyService {
 
         return surveyRepository.findBySurveyTopicsIn(topics, PageRequest.of(page, size))
                 .map(surveyFactory::createSurveyInfoFrom);
+    }
+
+    @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
+    public List<SurveyInfo> getSurveysCreatedByCurrentUser() {
+        return surveyRepository
+                .findAllByCreatorId(userRepository.getCurrentUser().getId())
+                .stream()
+                .map(surveyFactory::createSurveyInfoFrom)
+                .toList();
     }
 }

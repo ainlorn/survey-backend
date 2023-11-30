@@ -5,8 +5,7 @@ import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
-import com.midgetspinner31.survey.web.response.SurveyAnswerResponse;
-import com.midgetspinner31.survey.web.response.SurveyResponse;
+import com.midgetspinner31.survey.web.response.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -47,10 +46,16 @@ public class SurveyController {
      * Получить список доступных опросов
      */
     @GetMapping("/surveys")
-    public List<SurveyResponse> getSurveyList() {
-        return surveyService.getSurveyList().stream()
-                .map(SurveyResponse::new)
-                .toList();
+    public SurveyListResponse getSurveyList() {
+        return new SurveyListResponse(surveyService.getSurveyList());
+    }
+
+    /**
+     * Получить список опросов, созданных текущим пользователем
+     */
+    @GetMapping("/me/surveys")
+    public SurveyListResponse getMySurveys() {
+        return new SurveyListResponse(surveyService.getSurveysCreatedByCurrentUser());
     }
 
     //TODO: Заменить getSurveyList этим методом (переопределить)
@@ -83,6 +88,27 @@ public class SurveyController {
     public SurveyAnswerResponse saveSurveyAnswer(@PathVariable String surveyId,
                                                  @RequestBody @Valid SurveyAnswerRequest surveyAnswerRequest) {
         return new SurveyAnswerResponse(surveyAnswerService.saveSurveyAnswer(surveyId, surveyAnswerRequest));
+    }
+
+    /**
+     * Получить список ответов на опрос
+     * @param surveyId id опроса
+     */
+    @GetMapping("/survey/{surveyId}/answers")
+    public SurveyAnswerListResponse getSurveyAnswers(@PathVariable String surveyId) {
+        return new SurveyAnswerListResponse(surveyAnswerService.getSurveyAnswersBySurveyId(surveyId));
+    }
+
+    /**
+     * Получить список ответов на конкретный вопрос
+     * @param surveyId id опроса
+     * @param questionId индекс вопроса
+     */
+    @GetMapping("/survey/{surveyId}/single_answers/{questionId}")
+    public SurveySingleAnswerListResponse getSurveySingleQuestionAnswers(@PathVariable String surveyId,
+                                                                         @PathVariable int questionId) {
+        return new SurveySingleAnswerListResponse(
+                surveyAnswerService.getSurveySingleQuestionAnswers(surveyId, questionId));
     }
 
     /**

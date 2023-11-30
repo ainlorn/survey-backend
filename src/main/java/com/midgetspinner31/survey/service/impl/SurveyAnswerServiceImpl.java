@@ -1,13 +1,16 @@
 package com.midgetspinner31.survey.service.impl;
 
 import com.midgetspinner31.survey.db.dao.SurveyAnswerRepository;
+import com.midgetspinner31.survey.db.dao.SurveyRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
 import com.midgetspinner31.survey.db.entity.SurveyAnswer;
 import com.midgetspinner31.survey.db.entity.User;
 import com.midgetspinner31.survey.db.entity.answers.*;
 import com.midgetspinner31.survey.dto.*;
+import com.midgetspinner31.survey.exception.QuestionNotFoundException;
 import com.midgetspinner31.survey.exception.SurveyAnswerNotFoundException;
 import com.midgetspinner31.survey.exception.SurveyAnswerValidationException;
+import com.midgetspinner31.survey.exception.SurveyNotFoundException;
 import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.SizeLimitExceededException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -32,11 +36,12 @@ import java.util.stream.Collectors;
 public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     UserRepository userRepository;
     SurveyAnswerFactory surveyAnswerFactory;
+    SurveyRepository surveyRepository;
     SurveyAnswerRepository surveyAnswerRepository;
     SurveyService surveyService;
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@respondentService.isRespondent()")
     public SurveyAnswerInfo saveSurveyAnswer(String surveyId, SurveyAnswerRequest surveyAnswerRequest) {
         User user = userRepository.getCurrentUser();
         SurveyInfo surveyInfo = surveyService.getSurvey(surveyId);
@@ -108,8 +113,8 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     }
 
     @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public SurveyAnswerInfo getSurveyAnswer(String surveyId, String answerId) {
-        // TODO добавить проверку что пользователь является владельцем опроса
         SurveyAnswer answer = surveyAnswerRepository.findById(answerId)
                 .orElseThrow(SurveyAnswerNotFoundException::new);
         if (!Objects.equals(answer.getSurveyId(), surveyId))
@@ -119,9 +124,22 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     }
 
     @Override
-    public List<SurveyAnswerInfo> getSurveyAnswersBySurveyId(String surveyId) {
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
+    public List<SurveyAnswerShortInfo> getSurveyAnswersBySurveyId(String surveyId) {
         return surveyAnswerRepository.findAllBySurveyId(surveyId).stream()
-                .map(surveyAnswerFactory::createSurveyAnswerInfoFrom)
+                .map(surveyAnswerFactory::createSurveyAnswerShortInfoFrom)
                 .toList();
+    }
+
+    @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
+    public List<SurveySingleAnswerInfo> getSurveySingleQuestionAnswers(String surveyId, int questionId) {
+        var survey = surveyRepository.findById(surveyId)
+                .orElseThrow(SurveyNotFoundException::new);
+        if (questionId >= survey.getQuestions().size())
+            throw new QuestionNotFoundException();
+
+        return surveyAnswerRepository.findAllBySurveyId(surveyId).stream()
+                .map((x) -> new SurveySingleAnswerInfo(x.getRespondentId(), x.getAnswers().get(questionId))).toList();
     }
 }

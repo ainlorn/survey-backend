@@ -27,7 +27,8 @@ public enum StatusCode {
     // survey
     SURVEY_NOT_FOUND(200, 404, "Опрос не найден"),
     SURVEY_ANSWER_VALIDATION_ERROR(201, 400, "Неверный формат ответа на опрос"),
-    SURVEY_ANSWER_NOT_FOUND(202, 404, "Ответ на опрос не найден");
+    SURVEY_ANSWER_NOT_FOUND(202, 404, "Ответ на опрос не найден"),
+    QUESTION_NOT_FOUND(203, 404, "Вопрос не найден");
 
     int code;
     int httpCode;

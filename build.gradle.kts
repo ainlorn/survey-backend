@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.1.5"
 	id("io.spring.dependency-management") version "1.1.3"
+	id("com.bmuschko.docker-spring-boot-application") version "9.3.6"
 }
 
 group = "com.midgetspinner31"
@@ -14,6 +15,13 @@ java {
 configurations {
 	compileOnly {
 		extendsFrom(configurations.annotationProcessor.get())
+	}
+}
+
+docker {
+	springBootApplication {
+		baseImage = "openjdk:17-alpine"
+		ports = listOf(8080)
 	}
 }
 

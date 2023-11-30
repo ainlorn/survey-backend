@@ -1,31 +1,41 @@
 package com.midgetspinner31.survey.web.request;
 
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalSurveyCreatorDetails;
 import com.midgetspinner31.survey.dto.UserSignUpInfo;
+import com.midgetspinner31.survey.enumerable.AccountType;
 import com.midgetspinner31.survey.validation.constraint.PhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignUpRequest {
+public class SurveyCreatorSignUpRequest extends BaseRequest {
     /**
-     * Имя
+     * Название компании
      */
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я- ]{1,32}$")
+    @Size(max=128)
     @NotEmpty
-    String firstName;
+    String name;
 
     /**
-     * Фамилия
+     * О себе
      */
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я- ]{1,32}$")
+    @Size(max=5000)
     @NotEmpty
-    String lastName;
+    String about;
+
+    /**
+     * Слоган
+     */
+    @Size(max=500)
+    @NotEmpty
+    String slogan;
 
     /**
      * Адрес электронной почты
@@ -51,28 +61,32 @@ public class SignUpRequest {
 
     public UserSignUpInfo toUserSignUpInfo() {
         return new UserSignUpInfo(
-                firstName,
-                lastName,
+                AccountType.survey_creator,
                 email,
                 phoneNumber,
-                password
+                password,
+                new AdditionalSurveyCreatorDetails(name, about, slogan)
         );
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName.strip();
+    public void setName(String name) {
+        this.name = trim(name);
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName.strip();
+    public void setAbout(String about) {
+        this.about = trim(about);
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = trim(slogan);
     }
 
     public void setEmail(String email) {
-        this.email = email.strip();
+        this.email = trim(email);
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber.strip();
+        this.phoneNumber = trim(phoneNumber);
     }
 
     public void setPassword(String password) {

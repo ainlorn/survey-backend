@@ -19,4 +19,6 @@ public interface SurveyService {
     List<SurveyInfo> getSurveyList();
 
     Page<SurveyInfo> getSurveyPage(Integer page, Integer size, List<String> topics);
+
+    List<SurveyInfo> getSurveysCreatedByCurrentUser();
 }

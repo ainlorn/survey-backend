@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - app-network
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    networks:
+      - app-network
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+
+  app:
+    container_name: app
+    image: com.midgetspinner31/survey:0.0.1-snapshot
+    restart: always
+    environment:
+      MONGO_URL: mongodb://mongo:27017/survey
+    depends_on:
+      - nginx
+      - mongo
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

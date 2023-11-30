@@ -1,5 +1,7 @@
 package com.midgetspinner31.survey.dto;
 
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalUserDetails;
+import com.midgetspinner31.survey.enumerable.AccountType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,9 +11,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserSignUpInfo {
-    String firstName;
-    String lastName;
+    AccountType accountType;
     String email;
     String phoneNumber;
     String password;
+    AdditionalUserDetails additionalDetails;
 }

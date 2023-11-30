@@ -1,20 +1,18 @@
-package com.midgetspinner31.survey.web.request;
+package com.midgetspinner31.survey.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.midgetspinner31.survey.db.entity.answers.QuestionAnswer;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SurveyAnswerRequest extends BaseRequest {
-    @JsonProperty("polling_time")
-    Integer pollingTime;
+public class SurveySingleAnswerInfo {
+    @JsonProperty("respondent_id")
+    String respondentId;
 
-    List<JsonNode> answers;
+    QuestionAnswer answer;
 }
