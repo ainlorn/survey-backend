@@ -10,6 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Черновик опроса
+ */
 @Document("survey_drafts")
 @Getter
 @Setter
@@ -21,18 +24,38 @@ public class SurveyDraft {
     @Id
     String id;
 
+    /**
+     * Название опроса
+     */
     String name;
 
+    /**
+     * Описание опроса
+     */
     String description;
+
+    /**
+     * Список тем опроса
+     */
     @Field("survey_topics")
     List<String> surveyTopics;
 
+    /**
+     * id создателя
+     */
     @Field("creator_id")
     String creatorId;
+
+    /**
+     * Дата создания
+     */
 
     @Field("creation_date")
     Date creationDate;
 
+    /**
+     * Список вопросов
+     */
     List<Question> questions;
 
     public SurveyDraftInfo toSurveyDraftInfo() {

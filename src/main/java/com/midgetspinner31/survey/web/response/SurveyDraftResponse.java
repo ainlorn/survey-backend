@@ -12,5 +12,5 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SurveyDraftResponse extends BaseResponse {
-    SurveyDraftInfo surveyInfo;
+    SurveyDraftInfo surveyDraftInfo;
 }
