@@ -12,7 +12,6 @@ import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,12 +67,12 @@ public class SurveyController {
      * @param topics (опционально) темы опроса
      */
     @GetMapping("/surveys/page")
-    public Page<SurveyResponse> getSurveyListPage(
+    public SurveyPageResponse getSurveyListPage(
             @RequestParam @Min(0) Integer offset,
             @RequestParam @Min(1) @Max(100) Integer limit,
             @RequestParam(name = "topic", required = false) List<String> topics) {
 
-        return surveyService.getSurveyPage(offset, limit, topics).map(SurveyResponse::new);
+        return new SurveyPageResponse(surveyService.getSurveyPage(offset, limit, topics));
     }
 
     /**
