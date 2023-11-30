@@ -2,11 +2,10 @@ package com.midgetspinner31.survey.factory;
 
 import com.midgetspinner31.survey.db.entity.Question;
 import com.midgetspinner31.survey.db.entity.Restrictions;
-import com.midgetspinner31.survey.db.entity.Survey;
+import com.midgetspinner31.survey.db.entity.SurveyDraft;
 import com.midgetspinner31.survey.dto.QuestionInfo;
 import com.midgetspinner31.survey.dto.RestrictionsInfo;
 import com.midgetspinner31.survey.dto.SurveyDraftInfo;
-import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +13,18 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class SurveyFactory {
-    public Survey createSurveyFrom(SurveyInfo surveyInfo, List<Question> questions) {
-        return Survey.builder()
-                .name(surveyInfo.getName())
-                .description(surveyInfo.getDescription())
-                .surveyTopics(surveyInfo.getSurveyTopics())
-                .creatorId(surveyInfo.getCreatorId())
-                .creationDate(surveyInfo.getCreationDate())
-                .questions(questions)
+public class SurveyDraftFactory {
+    public SurveyDraft createSurveyDraftFrom(SurveyDraftInfo surveyDraftInfo) {
+        return SurveyDraft.builder()
+                .name(surveyDraftInfo.getName())
+                .description(surveyDraftInfo.getDescription())
+                .surveyTopics(surveyDraftInfo.getSurveyTopics())
+                .creatorId(surveyDraftInfo.getCreatorId())
+                .creationDate(surveyDraftInfo.getCreationDate())
+                .questions(createQuestionsFrom(surveyDraftInfo.getQuestions()))
                 .build();
     }
+
     public Question createQuestionFrom(QuestionInfo questionInfo, Restrictions restrictions) {
         return Question.builder()
                 .text(questionInfo.getText())
@@ -51,8 +51,8 @@ public class SurveyFactory {
                 .build();
     }
 
-    public SurveyInfo createSurveyInfoFrom(String creatorId, SurveyRequest surveyRequest) {
-        return new SurveyInfo(
+    public SurveyDraftInfo createSurveyDraftInfoFrom(String creatorId, SurveyRequest surveyRequest) {
+        return new SurveyDraftInfo(
                 null,
                 surveyRequest.getName(),
                 surveyRequest.getDescription(),
@@ -63,27 +63,15 @@ public class SurveyFactory {
         );
     }
 
-    public Survey createSurveyFrom(SurveyDraftInfo surveyDraftInfo) {
-        return Survey.builder()
-                .name(surveyDraftInfo.getName())
-                .description(surveyDraftInfo.getDescription())
-                .surveyTopics(surveyDraftInfo.getSurveyTopics())
-                .creatorId(surveyDraftInfo.getCreatorId())
-                .surveyTopics(surveyDraftInfo.getSurveyTopics())
-                .creationDate(new Date())
-                .questions(createQuestionsFrom(surveyDraftInfo.getQuestions()))
-                .build();
-    }
-
-    public SurveyInfo createSurveyInfoFrom(Survey survey) {
-        return new SurveyInfo(
-                survey.getId(),
-                survey.getName(),
-                survey.getDescription(),
-                survey.getSurveyTopics(),
-                survey.getCreatorId(),
-                survey.getCreationDate(),
-                survey.getQuestions().stream().map(Question::toQuestionInfo).toList()
+    public SurveyDraftInfo createSurveyDraftInfoFrom(SurveyDraft surveyDraft) {
+        return new SurveyDraftInfo(
+                surveyDraft.getId(),
+                surveyDraft.getName(),
+                surveyDraft.getDescription(),
+                surveyDraft.getSurveyTopics(),
+                surveyDraft.getCreatorId(),
+                new Date(),
+                surveyDraft.getQuestions().stream().map(Question::toQuestionInfo).toList()
         );
     }
 }

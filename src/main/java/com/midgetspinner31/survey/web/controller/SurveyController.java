@@ -7,13 +7,15 @@ import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
 import com.midgetspinner31.survey.web.response.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.SizeLimitExceededException;
 import java.util.List;
 
 @SurveyApiV1
@@ -56,8 +58,21 @@ public class SurveyController {
         return new SurveyListResponse(surveyService.getSurveysCreatedByCurrentUser());
     }
 
+    //TODO: Заменить getSurveyList этим методом (переопределить)
+    @GetMapping("/surveys/page")
+    public Page<SurveyResponse> getSurveyListPage(
+            @RequestParam @Min(0) Integer offset,
+            @RequestParam @Min(1) @Max(100) Integer limit,
+            @RequestParam(name = "topic", required = false) List<String> topics) {
+
+        System.out.println(topics);
+
+        return surveyService.getSurveyPage(offset, limit, topics).map(SurveyResponse::new);
+    }
+
     /**
      * Удалить опрос
+     *
      * @param surveyId id опроса
      */
     @DeleteMapping("/surveys/{surveyId}")
