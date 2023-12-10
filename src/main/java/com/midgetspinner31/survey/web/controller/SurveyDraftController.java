@@ -6,6 +6,7 @@ import com.midgetspinner31.survey.service.SurveyDraftService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
+import com.midgetspinner31.survey.web.response.SurveyDraftListResponse;
 import com.midgetspinner31.survey.web.response.SurveyDraftResponse;
 import com.midgetspinner31.survey.web.response.SurveyResponse;
 import lombok.AccessLevel;
@@ -37,6 +38,14 @@ public class SurveyDraftController {
     @GetMapping("/draft/{draftId}")
     public SurveyDraftResponse getSurveyDraft(@PathVariable String draftId) {
         return new SurveyDraftResponse(surveyDraftService.getSurveyDraft(draftId));
+    }
+
+    /**
+     * Получить все черновики
+     */
+    @GetMapping("/draft/all")
+    public SurveyDraftListResponse getAllSurveyDrafts() {
+        return new SurveyDraftListResponse(surveyDraftService.getAllSurveyDrafts());
     }
 
     /**
