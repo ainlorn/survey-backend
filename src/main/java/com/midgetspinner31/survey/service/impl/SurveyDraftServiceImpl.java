@@ -29,8 +29,8 @@ public class SurveyDraftServiceImpl implements SurveyDraftService {
     SurveyDraftFactory surveyDraftFactory;
 
     @Override
-    public List<SurveyDraftInfo> getAllSurveyDrafts() {
-        return surveyDraftRepository.findAll().stream().map(SurveyDraft::toSurveyDraftInfo).toList();
+    public List<SurveyDraftInfo> getAllSurveyDraftsByCreator(String userId) {
+        return surveyDraftRepository.findAllByCreatorId(userId).stream().map(SurveyDraft::toSurveyDraftInfo).toList();
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SurveyDraftService {
 
-    List<SurveyDraftInfo> getAllSurveyDrafts();
+    List<SurveyDraftInfo> getAllSurveyDraftsByCreator(String creatorId);
 
     SurveyDraftInfo getSurveyDraft(String id);
 
