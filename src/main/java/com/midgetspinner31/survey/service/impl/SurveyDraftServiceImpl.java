@@ -16,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -25,6 +27,11 @@ public class SurveyDraftServiceImpl implements SurveyDraftService {
     UserRepository userRepository;
     SurveyDraftRepository surveyDraftRepository;
     SurveyDraftFactory surveyDraftFactory;
+
+    @Override
+    public List<SurveyDraftInfo> getAllSurveyDraftsByCreator(String userId) {
+        return surveyDraftRepository.findAllByCreatorId(userId).stream().map(SurveyDraft::toSurveyDraftInfo).toList();
+    }
 
     @Override
     public SurveyDraftInfo getSurveyDraft(String id) {

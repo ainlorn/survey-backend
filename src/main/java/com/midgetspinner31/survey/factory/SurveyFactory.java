@@ -3,10 +3,7 @@ package com.midgetspinner31.survey.factory;
 import com.midgetspinner31.survey.db.entity.Question;
 import com.midgetspinner31.survey.db.entity.Restrictions;
 import com.midgetspinner31.survey.db.entity.Survey;
-import com.midgetspinner31.survey.dto.QuestionInfo;
-import com.midgetspinner31.survey.dto.RestrictionsInfo;
-import com.midgetspinner31.survey.dto.SurveyDraftInfo;
-import com.midgetspinner31.survey.dto.SurveyInfo;
+import com.midgetspinner31.survey.dto.*;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
 import org.springframework.stereotype.Component;
 
@@ -85,5 +82,15 @@ public class SurveyFactory {
                 survey.getCreationDate(),
                 survey.getQuestions().stream().map(Question::toQuestionInfo).toList()
         );
+    }
+
+    public SurveyShortInfo createSurveyShortInfoFrom(Survey survey) {
+        return new SurveyShortInfo(
+                survey.getId(),
+                survey.getName(),
+                survey.getDescription(),
+                survey.getSurveyTopics(),
+                survey.getCreatorId(),
+                survey.getCreationDate());
     }
 }
