@@ -7,6 +7,7 @@ import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.db.entity.User;
 import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
+import com.midgetspinner31.survey.dto.SurveyShortInfo;
 import com.midgetspinner31.survey.exception.SurveyNotFoundException;
 import com.midgetspinner31.survey.factory.SurveyFactory;
 import com.midgetspinner31.survey.service.SurveyService;
@@ -68,14 +69,21 @@ public class SurveyServiceImpl implements SurveyService {
                 .toList();
     }
 
-    public Page<SurveyInfo> getSurveyPage(Integer page, Integer size, List<String> topics) {
+    @Override
+    public List<SurveyShortInfo> getSurveyShortList() {
+        return surveyRepository.findAll().stream()
+                .map(surveyFactory::createSurveyShortInfoFrom)
+                .toList();
+    }
+
+    public Page<SurveyShortInfo> getSurveyPage(Integer page, Integer size, List<String> topics) {
         if (topics == null) {
             return surveyRepository.findAll(PageRequest.of(page, size))
-                    .map(surveyFactory::createSurveyInfoFrom);
+                    .map(surveyFactory::createSurveyShortInfoFrom);
         }
 
         return surveyRepository.findBySurveyTopicsIn(topics, PageRequest.of(page, size))
-                .map(surveyFactory::createSurveyInfoFrom);
+                .map(surveyFactory::createSurveyShortInfoFrom);
     }
 
     @Override

@@ -45,8 +45,8 @@ public class SurveyController {
      * Получить список доступных опросов
      */
     @GetMapping("/surveys")
-    public SurveyListResponse getSurveyList() {
-        return new SurveyListResponse(surveyService.getSurveyList());
+    public SurveyShortListResponse getSurveyList() {
+        return new SurveyShortListResponse(surveyService.getSurveyShortList());
     }
 
     /**
@@ -57,8 +57,6 @@ public class SurveyController {
         return new SurveyListResponse(surveyService.getSurveysCreatedByCurrentUser());
     }
 
-    //TODO: Заменить getSurveyList этим методом (переопределить)
-
     /**
      * Получить список опросов с пагинацией
      *
@@ -67,12 +65,12 @@ public class SurveyController {
      * @param topics (опционально) темы опроса
      */
     @GetMapping("/surveys/page")
-    public SurveyPageResponse getSurveyListPage(
+    public SurveyShortPageResponse getSurveyListPage(
             @RequestParam @Min(0) Integer offset,
             @RequestParam @Min(1) @Max(100) Integer limit,
             @RequestParam(name = "topic", required = false) List<String> topics) {
 
-        return new SurveyPageResponse(surveyService.getSurveyPage(offset, limit, topics));
+        return new SurveyShortPageResponse(surveyService.getSurveyPage(offset, limit, topics));
     }
 
     /**

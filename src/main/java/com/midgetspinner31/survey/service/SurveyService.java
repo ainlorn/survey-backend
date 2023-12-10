@@ -2,6 +2,7 @@ package com.midgetspinner31.survey.service;
 
 import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
+import com.midgetspinner31.survey.dto.SurveyShortInfo;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
 import org.springframework.data.domain.Page;
 
@@ -18,7 +19,9 @@ public interface SurveyService {
 
     List<SurveyInfo> getSurveyList();
 
-    Page<SurveyInfo> getSurveyPage(Integer page, Integer size, List<String> topics);
+    List<SurveyShortInfo> getSurveyShortList();
+
+    Page<SurveyShortInfo> getSurveyPage(Integer page, Integer size, List<String> topics);
 
     List<SurveyInfo> getSurveysCreatedByCurrentUser();
 }
