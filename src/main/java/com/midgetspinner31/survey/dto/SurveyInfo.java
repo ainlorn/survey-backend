@@ -1,6 +1,7 @@
 package com.midgetspinner31.survey.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.midgetspinner31.survey.db.entity.RespondentRestrictions;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -25,6 +26,8 @@ public class SurveyInfo {
 
     @JsonProperty("creation_date")
     Date creationDate;
+
     List<QuestionInfo> questions;
 
+    RespondentRestrictions respondentRestrictions;
 }

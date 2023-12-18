@@ -7,10 +7,7 @@ import com.midgetspinner31.survey.db.entity.SurveyAnswer;
 import com.midgetspinner31.survey.db.entity.User;
 import com.midgetspinner31.survey.db.entity.answers.*;
 import com.midgetspinner31.survey.dto.*;
-import com.midgetspinner31.survey.exception.QuestionNotFoundException;
-import com.midgetspinner31.survey.exception.SurveyAnswerNotFoundException;
-import com.midgetspinner31.survey.exception.SurveyAnswerValidationException;
-import com.midgetspinner31.survey.exception.SurveyNotFoundException;
+import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
@@ -45,6 +42,10 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     public SurveyAnswerInfo saveSurveyAnswer(String surveyId, SurveyAnswerRequest surveyAnswerRequest) {
         User user = userRepository.getCurrentUser();
         SurveyInfo surveyInfo = surveyService.getSurvey(surveyId);
+
+        if (!surveyService.currentUserMatchesRestrictions(surveyId))
+            throw new RespondentRestrictionsNotMatchedException();
+
         SurveyAnswerInfo surveyAnswerInfo =
                 surveyAnswerFactory.createSurveyAnswerInfoFrom(user.getId(), surveyInfo, surveyAnswerRequest);
 

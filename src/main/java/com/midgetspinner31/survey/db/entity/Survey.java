@@ -51,4 +51,9 @@ public class Survey {
      * Список вопросов
      */
     List<Question> questions;
+
+    /**
+     * Ограничения для отбора респондентов
+     */
+    RespondentRestrictions respondentRestrictions;
 }

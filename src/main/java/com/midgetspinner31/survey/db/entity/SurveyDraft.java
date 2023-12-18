@@ -58,6 +58,11 @@ public class SurveyDraft {
      */
     List<Question> questions;
 
+    /**
+     * Ограничения для отбора респондентов
+     */
+    RespondentRestrictions respondentRestrictions;
+
     public SurveyDraftInfo toSurveyDraftInfo() {
         return new SurveyDraftInfo(
                 id,
@@ -66,7 +71,8 @@ public class SurveyDraft {
                 surveyTopics,
                 creatorId,
                 creationDate,
-                questions.stream().map(Question::toQuestionInfo).toList()
+                questions.stream().map(Question::toQuestionInfo).toList(),
+                respondentRestrictions
         );
     }
 }

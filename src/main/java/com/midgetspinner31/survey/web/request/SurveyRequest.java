@@ -1,7 +1,10 @@
 package com.midgetspinner31.survey.web.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.midgetspinner31.survey.db.entity.RespondentRestrictions;
 import com.midgetspinner31.survey.dto.QuestionInfo;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,4 +23,8 @@ public class SurveyRequest extends BaseRequest {
     List<String> surveyTopics;
 
     List<QuestionInfo> questions;
+
+    @Valid
+    @NotNull
+    RespondentRestrictions respondentRestrictions;
 }
