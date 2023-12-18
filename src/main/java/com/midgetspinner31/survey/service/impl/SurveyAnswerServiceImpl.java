@@ -80,7 +80,7 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
             switch (question.getAnswerType()) {
                 case text:
                     String text = ((TextAnswer) answer).getText();
-                    if (text.length() > restrictions.getMaxLength())
+                    if (restrictions.getMaxLength() != null && text.length() > restrictions.getMaxLength())
                         throw new SurveyAnswerValidationException(
                                 "Text answer length (%d) is longer than max length (%d)"
                                         .formatted(text.length(), restrictions.getMaxLength()));
