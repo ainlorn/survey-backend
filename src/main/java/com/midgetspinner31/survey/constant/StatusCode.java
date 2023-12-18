@@ -17,6 +17,7 @@ public enum StatusCode {
     ACCESS_DENIED(4, 403, "Доступ к ресурсу запрещён"),
     UNAUTHORIZED(5, 401, "Для доступа к этому ресурсу необходимо войти"),
     OPERATION_NOT_ALLOWED(6, 400, "Запрещённая операция"),
+    INCORRECT_DATE(7, 400, "Некорректная дата"),
 
     // user account
     EMAIL_IN_USE(100, 400, "Адрес электронной почты уже используется"),
