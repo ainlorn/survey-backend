@@ -9,8 +9,12 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @FieldDefaults(level= AccessLevel.PRIVATE)
 public class SurveyResponse extends BaseResponse {
     SurveyInfo surveyInfo;
+    Boolean userMeetsRestrictions;
+
+    public SurveyResponse(SurveyInfo surveyInfo) {
+        this.surveyInfo = surveyInfo;
+    }
 }

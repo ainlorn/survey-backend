@@ -38,7 +38,9 @@ public class SurveyController {
      */
     @GetMapping("/surveys/{surveyId}")
     public SurveyResponse getSurvey(@PathVariable String surveyId) {
-        return new SurveyResponse(surveyService.getSurvey(surveyId));
+        var response = new SurveyResponse(surveyService.getSurvey(surveyId));
+        response.setUserMeetsRestrictions(surveyService.currentUserMatchesRestrictions(response.getSurveyInfo().getId()));
+        return response;
     }
 
     /**

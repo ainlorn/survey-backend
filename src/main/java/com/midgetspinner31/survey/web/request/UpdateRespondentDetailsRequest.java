@@ -1,22 +1,22 @@
 package com.midgetspinner31.survey.web.request;
 
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalUserDetails;
 import com.midgetspinner31.survey.dto.BirthDateInfo;
-import com.midgetspinner31.survey.dto.UserSignUpInfo;
-import com.midgetspinner31.survey.enumerable.AccountType;
 import com.midgetspinner31.survey.enumerable.EducationStatus;
 import com.midgetspinner31.survey.enumerable.FamilyStatus;
 import com.midgetspinner31.survey.enumerable.Gender;
-import com.midgetspinner31.survey.validation.constraint.PhoneNumber;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RespondentSignUpRequest extends BaseRequest {
+public class UpdateRespondentDetailsRequest extends BaseRequest {
     /**
      * Имя
      */
@@ -84,44 +84,16 @@ public class RespondentSignUpRequest extends BaseRequest {
     @NotNull
     Integer income;
 
-    /**
-     * Адрес электронной почты
-     */
-    @Email
-    @Size(max = 255)
-    @NotEmpty
-    String email;
-
-    /**
-     * Номер телефона в формате +7xxxxxxxxxx
-     */
-    @PhoneNumber
-    @NotEmpty
-    String phoneNumber;
-
-    /**
-     * Пароль
-     */
-    @Size(min = 8, max = 72)
-    @NotEmpty
-    String password;
-
-    public UserSignUpInfo toUserSignUpInfo() {
-        return new UserSignUpInfo(
-                AccountType.respondent,
-                email,
-                phoneNumber,
-                password,
-                new AdditionalRespondentDetails(
-                        firstName,
-                        lastName,
-                        birthDate.toDate(),
-                        gender,
-                        region,
-                        familyStatus,
-                        educationStatus,
-                        income
-                )
+    public AdditionalUserDetails toAdditionalUserDetails() {
+        return new AdditionalRespondentDetails(
+                firstName,
+                lastName,
+                birthDate.toDate(),
+                gender,
+                region,
+                familyStatus,
+                educationStatus,
+                income
         );
     }
 
@@ -131,18 +103,6 @@ public class RespondentSignUpRequest extends BaseRequest {
 
     public void setLastName(String lastName) {
         this.lastName = trim(lastName);
-    }
-
-    public void setEmail(String email) {
-        this.email = trim(email);
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = trim(phoneNumber);
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setBirthDate(BirthDateInfo birthDate) {

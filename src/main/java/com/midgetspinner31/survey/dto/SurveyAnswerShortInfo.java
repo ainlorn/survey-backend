@@ -1,6 +1,7 @@
 package com.midgetspinner31.survey.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +24,9 @@ public class SurveyAnswerShortInfo {
 
     @JsonProperty("respondent_id")
     String respondentId;
+
+    @JsonProperty("respondent_details")
+    AdditionalRespondentDetails respondentDetails;
 
     @JsonProperty("polling_time")
     Integer pollingTime;

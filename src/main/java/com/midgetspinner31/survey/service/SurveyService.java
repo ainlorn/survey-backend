@@ -24,4 +24,6 @@ public interface SurveyService {
     Page<SurveyShortInfo> getSurveyPage(Integer page, Integer size, List<String> topics);
 
     List<SurveyInfo> getSurveysCreatedByCurrentUser();
+
+    Boolean currentUserMatchesRestrictions(String surveyId);
 }

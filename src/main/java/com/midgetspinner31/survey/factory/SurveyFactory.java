@@ -20,6 +20,7 @@ public class SurveyFactory {
                 .creatorId(surveyInfo.getCreatorId())
                 .creationDate(surveyInfo.getCreationDate())
                 .questions(questions)
+                .respondentRestrictions(surveyInfo.getRespondentRestrictions())
                 .build();
     }
     public Question createQuestionFrom(QuestionInfo questionInfo, Restrictions restrictions) {
@@ -56,7 +57,8 @@ public class SurveyFactory {
                 surveyRequest.getSurveyTopics(),
                 creatorId,
                 new Date(),
-                surveyRequest.getQuestions()
+                surveyRequest.getQuestions(),
+                surveyRequest.getRespondentRestrictions()
         );
     }
 
@@ -69,6 +71,7 @@ public class SurveyFactory {
                 .surveyTopics(surveyDraftInfo.getSurveyTopics())
                 .creationDate(new Date())
                 .questions(createQuestionsFrom(surveyDraftInfo.getQuestions()))
+                .respondentRestrictions(surveyDraftInfo.getRespondentRestrictions())
                 .build();
     }
 
@@ -80,7 +83,8 @@ public class SurveyFactory {
                 survey.getSurveyTopics(),
                 survey.getCreatorId(),
                 survey.getCreationDate(),
-                survey.getQuestions().stream().map(Question::toQuestionInfo).toList()
+                survey.getQuestions().stream().map(Question::toQuestionInfo).toList(),
+                survey.getRespondentRestrictions()
         );
     }
 
