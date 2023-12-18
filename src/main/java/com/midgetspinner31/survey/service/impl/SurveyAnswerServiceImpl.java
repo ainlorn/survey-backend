@@ -6,6 +6,7 @@ import com.midgetspinner31.survey.db.dao.UserRepository;
 import com.midgetspinner31.survey.db.entity.SurveyAnswer;
 import com.midgetspinner31.survey.db.entity.User;
 import com.midgetspinner31.survey.db.entity.answers.*;
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import com.midgetspinner31.survey.dto.*;
 import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
@@ -141,6 +142,11 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
             throw new QuestionNotFoundException();
 
         return surveyAnswerRepository.findAllBySurveyId(surveyId).stream()
-                .map((x) -> new SurveySingleAnswerInfo(x.getRespondentId(), x.getAnswers().get(questionId))).toList();
+                .map((x) -> new SurveySingleAnswerInfo(
+                        x.getRespondentId(),
+                        (AdditionalRespondentDetails) userRepository.findById(x.getRespondentId())
+                                .map(User::getAdditionalDetails)
+                                .orElse(null),
+                        x.getAnswers().get(questionId))).toList();
     }
 }

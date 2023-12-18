@@ -2,8 +2,11 @@ package com.midgetspinner31.survey.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.midgetspinner31.survey.db.dao.UserRepository;
 import com.midgetspinner31.survey.db.entity.SurveyAnswer;
+import com.midgetspinner31.survey.db.entity.User;
 import com.midgetspinner31.survey.db.entity.answers.QuestionAnswer;
+import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import com.midgetspinner31.survey.dto.SurveyAnswerInfo;
 import com.midgetspinner31.survey.dto.SurveyAnswerShortInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
@@ -18,6 +21,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class SurveyAnswerFactory {
+    private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
 
     public SurveyAnswer createSurveyAnswerFrom(SurveyAnswerInfo surveyAnswerInfo) {
@@ -36,6 +40,7 @@ public class SurveyAnswerFactory {
                 surveyAnswer.getId(),
                 surveyAnswer.getAnsweredAt(),
                 surveyAnswer.getRespondentId(),
+                findRespondentDetails(surveyAnswer.getRespondentId()),
                 surveyAnswer.getPollingTime(),
                 surveyAnswer.getAnswers());
     }
@@ -46,6 +51,7 @@ public class SurveyAnswerFactory {
                 surveyAnswer.getId(),
                 surveyAnswer.getAnsweredAt(),
                 surveyAnswer.getRespondentId(),
+                findRespondentDetails(surveyAnswer.getRespondentId()),
                 surveyAnswer.getPollingTime()
         );
     }
@@ -76,7 +82,14 @@ public class SurveyAnswerFactory {
                 null,
                 new Date(),
                 respondentId,
+                findRespondentDetails(respondentId),
                 surveyAnswerRequest.getPollingTime(),
                 answers);
+    }
+
+    private AdditionalRespondentDetails findRespondentDetails(String respondentId) {
+        return (AdditionalRespondentDetails) userRepository.findById(respondentId)
+                .map(User::getAdditionalDetails)
+                .orElse(null);
     }
 }
