@@ -21,6 +21,9 @@ import org.springframework.web.server.MethodNotAllowedException;
 public class DefaultAdvice {
     @ExceptionHandler({BaseException.class})
     public ResponseEntity<ErrorResponse> baseException(BaseException e) {
+        if (e.getMessage() != null) {
+            return AdviceUtils.createResponse(e.getStatus(), e.getMessage());
+        }
         return AdviceUtils.createResponse(e.getStatus());
     }
 

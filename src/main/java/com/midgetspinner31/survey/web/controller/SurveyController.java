@@ -6,6 +6,7 @@ import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
 import com.midgetspinner31.survey.web.response.*;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -15,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @SurveyApiV1
@@ -97,6 +99,7 @@ public class SurveyController {
 
     /**
      * Получить список ответов на опрос
+     *
      * @param surveyId id опроса
      */
     @GetMapping("/survey/{surveyId}/answers")
@@ -104,9 +107,19 @@ public class SurveyController {
         return new SurveyAnswerListResponse(surveyAnswerService.getSurveyAnswersBySurveyId(surveyId));
     }
 
+    @GetMapping("/surveys/{surveyId}/csv")
+    public void getRespondentInfoCSVForSurvey(
+            @PathVariable String surveyId,
+            @RequestParam(name = "field", required = false) List<String> fields,
+            HttpServletResponse httpServletResponse) throws IOException {
+
+        surveyAnswerService.exportRespondentDetailsBySurveyIdToCsv(surveyId, fields, httpServletResponse);
+    }
+
     /**
      * Получить список ответов на конкретный вопрос
-     * @param surveyId id опроса
+     *
+     * @param surveyId   id опроса
      * @param questionId индекс вопроса
      */
     @GetMapping("/survey/{surveyId}/single_answers/{questionId}")

@@ -1,5 +1,6 @@
 package com.midgetspinner31.survey.service.impl;
 
+import com.midgetspinner31.survey.FileExporter;
 import com.midgetspinner31.survey.db.dao.SurveyAnswerRepository;
 import com.midgetspinner31.survey.db.dao.SurveyRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
@@ -13,6 +14,7 @@ import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,12 +22,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.SizeLimitExceededException;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,10 +35,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     UserRepository userRepository;
+
     SurveyAnswerFactory surveyAnswerFactory;
     SurveyRepository surveyRepository;
     SurveyAnswerRepository surveyAnswerRepository;
     SurveyService surveyService;
+    FileExporter fileExporter;
 
     @Override
     @PreAuthorize("@respondentService.isRespondent()")
@@ -148,5 +152,62 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
                                 .map(User::getAdditionalDetails)
                                 .orElse(null),
                         x.getAnswers().get(questionId))).toList();
+    }
+
+    @Override
+    @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
+    public void exportRespondentDetailsBySurveyIdToCsv(
+            String surveyId,
+            List<String> fields,
+            HttpServletResponse httpServletResponse) throws IOException {
+
+
+        List<String> fieldNames = Arrays
+                .stream(AdditionalRespondentDetails.class.getDeclaredFields())
+                .map(Field::getName).toList();
+
+        if (fields == null || fields.isEmpty()) {
+            fields = fieldNames;
+        } else {
+            fields.forEach(field -> {
+                if (!fieldNames.contains(field)) {
+                    throw new IncorrectRespondentDetailsFieldException("Некорректное указано поле респондента: " + field);
+                }
+            });
+        }
+
+        List<SurveyAnswerShortInfo> shortInfos = getSurveyAnswersBySurveyId(surveyId);
+        List<AdditionalRespondentDetails> respondentDetails = shortInfos.stream()
+                .map(SurveyAnswerShortInfo::getRespondentDetails)
+                .toList();
+
+        fileExporter.exportRespondentDetailsToCsv(respondentDetails, fields.toArray(new String[0]), httpServletResponse, surveyId);
+
+    }
+
+    public void exportRespondentDetailsBySurveyIdToXlsx(String surveyId,
+                                                        List<String> fields,
+                                                        HttpServletResponse httpServletResponse) throws IOException {
+        List<String> fieldNames = Arrays
+                .stream(AdditionalRespondentDetails.class.getDeclaredFields())
+                .map(Field::getName).toList();
+
+        if (fields == null || fields.isEmpty()) {
+            fields = fieldNames;
+        } else {
+            fields.forEach(field -> {
+                if (!fieldNames.contains(field)) {
+                    throw new IncorrectRespondentDetailsFieldException("Некорректное указано поле респондента: " + field);
+                }
+            });
+        }
+
+        List<SurveyAnswerShortInfo> shortInfos = getSurveyAnswersBySurveyId(surveyId);
+        List<AdditionalRespondentDetails> respondentDetails = shortInfos.stream()
+                .map(SurveyAnswerShortInfo::getRespondentDetails)
+                .toList();
+
+        fileExporter.exportRespondentDetailsToXlsx(respondentDetails, fields.toArray(new String[0]), httpServletResponse, surveyId);
+
     }
 }

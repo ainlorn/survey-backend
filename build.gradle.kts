@@ -41,6 +41,8 @@ dependencies {
 	implementation("io.mongock:mongodb-springdata-v4-driver:$mongockVersion")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("com.github.therapi:therapi-runtime-javadoc:0.15.0")
+	implementation("net.sf.supercsv:super-csv:2.4.0")
+	implementation("org.apache.poi:poi-ooxml:5.2.3")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
