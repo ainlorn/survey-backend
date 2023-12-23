@@ -107,6 +107,16 @@ public class SurveyController {
         return new SurveyAnswerListResponse(surveyAnswerService.getSurveyAnswersBySurveyId(surveyId));
     }
 
+    /**
+     * Экспорт csv с информацией о респондентах
+     *
+     * @param surveyId            id опроса
+     * @param fields              поля по которым нужно делать выборку: <br>
+     *                            firstName, lastName, birthDate, gender, region, familyStatus, educationStatus,  income;
+     * @param httpServletResponse
+     * @return csv файл
+     * @throws IOException
+     */
     @GetMapping("/surveys/{surveyId}/csv")
     public void getRespondentInfoCSVForSurvey(
             @PathVariable String surveyId,
