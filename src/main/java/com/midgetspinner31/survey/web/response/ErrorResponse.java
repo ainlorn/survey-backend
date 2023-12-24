@@ -14,4 +14,9 @@ public class ErrorResponse extends BaseResponse {
         super.setStatus(statusCode.getCode());
         super.setMessage(statusCode.getMessage());
     }
+
+    public ErrorResponse(StatusCode statusCode, String message) {
+        super.setStatus(statusCode.getCode());
+        super.setMessage(message);
+    }
 }

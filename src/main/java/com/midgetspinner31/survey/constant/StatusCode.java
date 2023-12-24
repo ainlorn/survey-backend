@@ -30,7 +30,8 @@ public enum StatusCode {
     SURVEY_ANSWER_VALIDATION_ERROR(201, 400, "Неверный формат ответа на опрос"),
     SURVEY_ANSWER_NOT_FOUND(202, 404, "Ответ на опрос не найден"),
     QUESTION_NOT_FOUND(203, 404, "Вопрос не найден"),
-    RESPONDENT_RESTRICTIONS_NOT_MATCHED(204, 403, "Вы не подходите по критериям данного опроса");
+    RESPONDENT_RESTRICTIONS_NOT_MATCHED(204, 403, "Вы не подходите по критериям данного опроса"),
+    RESPONDENT_FIELD_INVALID(200, 400, "Некорректно указано одно из полей данных о респонденте");
 
     int code;
     int httpCode;

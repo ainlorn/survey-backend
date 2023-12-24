@@ -8,4 +8,8 @@ public class AdviceUtils {
     public static ResponseEntity<ErrorResponse> createResponse(StatusCode s) {
         return ResponseEntity.status(s.getHttpCode()).body(new ErrorResponse(s));
     }
+
+    public static ResponseEntity<ErrorResponse> createResponse(StatusCode s, String message) {
+        return ResponseEntity.status(s.getHttpCode()).body(new ErrorResponse(s, message));
+    }
 }
