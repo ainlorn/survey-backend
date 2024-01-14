@@ -26,7 +26,7 @@ public class FileExporter {
 
 
         String fileName = surveyId + "_" + "respondent_details.csv";
-        response.setContentType("text/csv");
+        response.setContentType("text/csv; charset=UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = " + fileName);
         ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.EXCEL_PREFERENCE);
 
