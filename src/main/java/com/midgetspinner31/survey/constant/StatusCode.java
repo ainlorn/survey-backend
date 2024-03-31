@@ -18,6 +18,7 @@ public enum StatusCode {
     UNAUTHORIZED(5, 401, "Для доступа к этому ресурсу необходимо войти"),
     OPERATION_NOT_ALLOWED(6, 400, "Запрещённая операция"),
     INCORRECT_DATE(7, 400, "Некорректная дата"),
+    RESPONDENT_RESTRICTIONS_NOT_MATCHED(8, 403, "Вы не подходите по критериям данного опроса/интервью"),
 
     // user account
     EMAIL_IN_USE(100, 400, "Адрес электронной почты уже используется"),
@@ -30,8 +31,15 @@ public enum StatusCode {
     SURVEY_ANSWER_VALIDATION_ERROR(201, 400, "Неверный формат ответа на опрос"),
     SURVEY_ANSWER_NOT_FOUND(202, 404, "Ответ на опрос не найден"),
     QUESTION_NOT_FOUND(203, 404, "Вопрос не найден"),
-    RESPONDENT_RESTRICTIONS_NOT_MATCHED(204, 403, "Вы не подходите по критериям данного опроса"),
-    RESPONDENT_FIELD_INVALID(200, 400, "Некорректно указано одно из полей данных о респонденте");
+    RESPONDENT_FIELD_INVALID(200, 400, "Некорректно указано одно из полей данных о респонденте"),
+
+    // interview
+    INTERVIEW_NOT_FOUND(300, 404, "Интервью не найдено"),
+    INTERVIEW_INVALID_TIME(305, 400, "Некорректное время интервью"),
+    INTERVIEW_SLOT_NOT_FOUND(301, 404, "Слот интервью не найден"),
+    INTERVIEW_SLOT_ALREADY_ACQUIRED(302, 403, "Слот интервью уже занят"),
+    INTERVIEW_SLOT_ENDED(303, 400, "Регистрация на слот интервью закончилась"),
+    INTERVIEW_SLOT_INVALID_TIME(304, 400, "Некорректное время слота");
 
     int code;
     int httpCode;
