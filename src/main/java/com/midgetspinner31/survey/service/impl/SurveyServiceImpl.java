@@ -9,7 +9,6 @@ import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDeta
 import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.dto.SurveyShortInfo;
-import com.midgetspinner31.survey.enumerable.AccountType;
 import com.midgetspinner31.survey.exception.SurveyNotFoundException;
 import com.midgetspinner31.survey.factory.SurveyFactory;
 import com.midgetspinner31.survey.service.SurveyService;
@@ -23,8 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -35,7 +32,6 @@ public class SurveyServiceImpl implements SurveyService {
     UserRepository userRepository;
     SurveyRepository surveyRepository;
     SurveyFactory surveyFactory;
-
     @Override
     public SurveyInfo getSurvey(String id) {
         return surveyFactory.createSurveyInfoFrom(
@@ -81,13 +77,11 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     public Page<SurveyShortInfo> getSurveyPage(Integer page, Integer size, List<String> topics) {
-        if (topics == null) {
-            return surveyRepository.findAll(PageRequest.of(page, size))
-                    .map(surveyFactory::createSurveyShortInfoFrom);
-        }
 
-        return surveyRepository.findBySurveyTopicsIn(topics, PageRequest.of(page, size))
-                .map(surveyFactory::createSurveyShortInfoFrom);
+        AdditionalRespondentDetails details = (AdditionalRespondentDetails) userRepository.getCurrentUser()
+                .getAdditionalDetails();
+
+        return surveyRepository.findSurveyByTopics(topics, PageRequest.of(page, size), details).map(surveyFactory::createSurveyShortInfoFrom);
     }
 
     @Override
@@ -98,60 +92,5 @@ public class SurveyServiceImpl implements SurveyService {
                 .stream()
                 .map(surveyFactory::createSurveyInfoFrom)
                 .toList();
-    }
-
-    @Override
-    public Boolean currentUserMatchesRestrictions(String surveyId) {
-        var user = userRepository.getCurrentUser();
-        if (user == null || user.getAccountType() != AccountType.respondent)
-            return null;
-        var survey = surveyRepository.findById(surveyId)
-                .orElseThrow(SurveyNotFoundException::new);
-        var restrictions = survey.getRespondentRestrictions();
-        var details = (AdditionalRespondentDetails) user.getAdditionalDetails();
-
-        if (restrictions == null)
-            return true;
-
-        Integer age = null;
-        if (details.getBirthDate() != null) {
-            age = (int) ChronoUnit.YEARS.between(
-                    details.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                    LocalDateTime.now()
-            );
-        }
-
-        if (restrictions.getMinAge() != null
-                && (age == null || age < restrictions.getMinAge()))
-            return false;
-
-        if (restrictions.getMaxAge() != null
-                && (age == null || age > restrictions.getMaxAge()))
-            return false;
-
-        if (restrictions.getAllowedGenders() != null
-                && (details.getGender() == null || !restrictions.getAllowedGenders().contains(details.getGender())))
-            return false;
-
-        if (restrictions.getAllowedRegions() != null
-                && (details.getRegion() == null || !restrictions.getAllowedRegions().contains(details.getRegion())))
-            return false;
-
-        if (restrictions.getAllowedEducation() != null
-                && (details.getEducationStatus() == null || !restrictions.getAllowedEducation().contains(details.getEducationStatus())))
-            return false;
-
-        if (restrictions.getAllowedFamilyStatus() != null
-                && (details.getFamilyStatus() == null || !restrictions.getAllowedFamilyStatus().contains(details.getFamilyStatus())))
-            return false;
-
-        if (restrictions.getMinIncome() != null
-                && (details.getIncome() == null || details.getIncome() < restrictions.getMinIncome()))
-            return false;
-
-        if (restrictions.getMaxIncome() != null
-                && (details.getIncome() == null || details.getIncome() > restrictions.getMaxIncome()))
-            return false;
-        return true;
     }
 }
