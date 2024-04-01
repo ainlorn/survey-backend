@@ -3,12 +3,15 @@ package com.midgetspinner31.survey.service.impl;
 import com.midgetspinner31.survey.db.dao.InterviewRepository;
 import com.midgetspinner31.survey.db.dao.InterviewSlotRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
+import com.midgetspinner31.survey.db.entity.Interview;
+import com.midgetspinner31.survey.db.entity.InterviewSlot;
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import com.midgetspinner31.survey.dto.InterviewInfo;
 import com.midgetspinner31.survey.dto.InterviewSlotInfo;
 import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.InterviewFactory;
 import com.midgetspinner31.survey.service.InterviewService;
+import com.midgetspinner31.survey.service.RespondentService;
 import com.midgetspinner31.survey.web.request.InterviewRequest;
 import com.midgetspinner31.survey.web.request.InterviewSlotRequest;
 import lombok.AccessLevel;
@@ -32,6 +35,8 @@ public class InterviewServiceImpl implements InterviewService {
     InterviewRepository interviewRepository;
     InterviewSlotRepository interviewSlotRepository;
     InterviewFactory interviewFactory;
+
+    RespondentService respondentService;
 
     @Override
     public InterviewInfo getInterview(String id) {
@@ -173,7 +178,7 @@ public class InterviewServiceImpl implements InterviewService {
     @Override
     @PreAuthorize("@respondentService.isRespondent()")
     public InterviewSlotInfo acquireSlot(String slotId) {
-        var slot = interviewSlotRepository.findById(slotId)
+        InterviewSlot slot = interviewSlotRepository.findById(slotId)
                 .orElseThrow(InterviewSlotNotFoundException::new);
 
         if (slot.getStartDate().before(new Date()))
@@ -181,7 +186,12 @@ public class InterviewServiceImpl implements InterviewService {
         if (slot.getRespondentId() != null)
             throw new InterviewSlotAlreadyAcquiredException();
 
-        // TODO check for requirements
+        Interview interview = interviewRepository.findById(slot.getInterviewId())
+                .orElseThrow(InterviewNotFoundException::new);
+
+        if (!respondentService.currentUserMatchesRestrictions(interview.getRespondentRestrictions())) {
+            throw new RespondentRestrictionsNotMatchedException();
+        }
 
         slot.setRespondentId(userRepository.getCurrentUser().getId());
         slot = interviewSlotRepository.save(slot);

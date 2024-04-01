@@ -11,6 +11,7 @@ import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDeta
 import com.midgetspinner31.survey.dto.*;
 import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
+import com.midgetspinner31.survey.service.RespondentService;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
@@ -41,6 +42,7 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     SurveyAnswerRepository surveyAnswerRepository;
     SurveyService surveyService;
     FileExporter fileExporter;
+    RespondentService respondentService;
 
     @Override
     @PreAuthorize("@respondentService.isRespondent()")
@@ -48,7 +50,7 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
         User user = userRepository.getCurrentUser();
         SurveyInfo surveyInfo = surveyService.getSurvey(surveyId);
 
-        if (!surveyService.currentUserMatchesRestrictions(surveyId))
+        if (!respondentService.currentUserMatchesRestrictions(surveyInfo.getRespondentRestrictions()))
             throw new RespondentRestrictionsNotMatchedException();
 
         SurveyAnswerInfo surveyAnswerInfo =

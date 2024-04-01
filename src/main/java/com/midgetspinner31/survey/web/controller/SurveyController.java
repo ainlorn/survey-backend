@@ -1,5 +1,6 @@
 package com.midgetspinner31.survey.web.controller;
 
+import com.midgetspinner31.survey.service.RespondentService;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
@@ -25,6 +26,7 @@ import java.util.List;
 public class SurveyController {
     SurveyService surveyService;
     SurveyAnswerService surveyAnswerService;
+    RespondentService respondentService;
 
     /**
      * Cохранить опрос
@@ -41,7 +43,8 @@ public class SurveyController {
     @GetMapping("/surveys/{surveyId}")
     public SurveyResponse getSurvey(@PathVariable String surveyId) {
         var response = new SurveyResponse(surveyService.getSurvey(surveyId));
-        response.setUserMeetsRestrictions(surveyService.currentUserMatchesRestrictions(response.getSurveyInfo().getId()));
+        response.setUserMeetsRestrictions(respondentService
+                .currentUserMatchesRestrictions(response.getSurveyInfo().getRespondentRestrictions()));
         return response;
     }
 
