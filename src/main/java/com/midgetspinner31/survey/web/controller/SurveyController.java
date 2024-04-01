@@ -73,8 +73,8 @@ public class SurveyController {
      */
     @GetMapping("/surveys/page")
     public SurveyShortPageResponse getSurveyListPage(
-            @RequestParam @Min(0) Integer offset,
-            @RequestParam @Min(1) @Max(100) Integer limit,
+            @RequestParam(defaultValue = "0") @Min(0) Integer offset,
+            @RequestParam(defaultValue = "25") @Min(1) @Max(100) Integer limit,
             @RequestParam(name = "topic", required = false) List<String> topics) {
 
         return new SurveyShortPageResponse(surveyService.getSurveyPage(offset, limit, topics));
