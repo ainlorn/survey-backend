@@ -1,5 +1,6 @@
 package com.midgetspinner31.survey.db.dao.impl;
 
+import com.midgetspinner31.survey.db.dao.InterviewQueryRepostiory;
 import com.midgetspinner31.survey.db.entity.Interview;
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import com.midgetspinner31.survey.db.utils.QueryUtils;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class InterviewQueryRepository extends AbstractQueryRepository<Interview> {
+public class InterviewQueryRepository extends AbstractQueryRepository<Interview> implements InterviewQueryRepostiory {
 
     protected InterviewQueryRepository(MongoTemplate mongoTemplate) {
         super(mongoTemplate);

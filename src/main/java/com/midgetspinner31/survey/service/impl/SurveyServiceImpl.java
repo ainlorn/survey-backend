@@ -2,7 +2,6 @@ package com.midgetspinner31.survey.service.impl;
 
 import com.midgetspinner31.survey.db.dao.SurveyRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
-import com.midgetspinner31.survey.db.dao.impl.SurveyQueryRepository;
 import com.midgetspinner31.survey.db.entity.Question;
 import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.db.entity.User;
@@ -37,8 +36,6 @@ public class SurveyServiceImpl implements SurveyService {
     UserRepository userRepository;
     SurveyRepository surveyRepository;
     SurveyFactory surveyFactory;
-    SurveyQueryRepository surveyQueryRepository;
-
     @Override
     public SurveyInfo getSurvey(String id) {
         return surveyFactory.createSurveyInfoFrom(
@@ -88,7 +85,7 @@ public class SurveyServiceImpl implements SurveyService {
         AdditionalRespondentDetails details = (AdditionalRespondentDetails) userRepository.getCurrentUser()
                 .getAdditionalDetails();
 
-        return surveyQueryRepository.findSurveyByTopics(topics, PageRequest.of(page, size), details).map(surveyFactory::createSurveyShortInfoFrom);
+        return surveyRepository.findSurveyByTopics(topics, PageRequest.of(page, size), details).map(surveyFactory::createSurveyShortInfoFrom);
     }
 
     @Override

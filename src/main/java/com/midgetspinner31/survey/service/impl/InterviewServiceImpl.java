@@ -3,7 +3,6 @@ package com.midgetspinner31.survey.service.impl;
 import com.midgetspinner31.survey.db.dao.InterviewRepository;
 import com.midgetspinner31.survey.db.dao.InterviewSlotRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
-import com.midgetspinner31.survey.db.dao.impl.InterviewQueryRepository;
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import com.midgetspinner31.survey.dto.InterviewInfo;
 import com.midgetspinner31.survey.dto.InterviewSlotInfo;
@@ -33,7 +32,6 @@ public class InterviewServiceImpl implements InterviewService {
     InterviewRepository interviewRepository;
     InterviewSlotRepository interviewSlotRepository;
     InterviewFactory interviewFactory;
-    InterviewQueryRepository interviewQueryRepository;
 
     @Override
     public InterviewInfo getInterview(String id) {
@@ -140,7 +138,7 @@ public class InterviewServiceImpl implements InterviewService {
 
         AdditionalRespondentDetails details = (AdditionalRespondentDetails) userRepository.getCurrentUser().getAdditionalDetails();
 
-        return interviewQueryRepository.findInterviewsByInterviewTopics(topics, PageRequest.of(page, size), details)
+        return interviewRepository.findInterviewsByInterviewTopics(topics, PageRequest.of(page, size), details)
                 .map(interviewFactory::createInterviewInfoFrom);
     }
 
