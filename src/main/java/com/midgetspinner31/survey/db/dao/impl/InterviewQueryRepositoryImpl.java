@@ -14,9 +14,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class InterviewQueryRepository extends AbstractQueryRepository<Interview> implements InterviewQueryRepostiory {
+public class InterviewQueryRepositoryImpl extends AbstractQueryRepository<Interview> implements InterviewQueryRepostiory {
 
-    protected InterviewQueryRepository(MongoTemplate mongoTemplate) {
+    protected InterviewQueryRepositoryImpl(MongoTemplate mongoTemplate) {
         super(mongoTemplate);
     }
 
