@@ -2,6 +2,7 @@ package com.midgetspinner31.survey.service.impl;
 
 import com.midgetspinner31.survey.db.dao.SurveyRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
+import com.midgetspinner31.survey.db.dao.impl.SurveyQueryRepository;
 import com.midgetspinner31.survey.db.entity.Question;
 import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.db.entity.User;
@@ -23,7 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class SurveyServiceImpl implements SurveyService {
     UserRepository userRepository;
     SurveyRepository surveyRepository;
     SurveyFactory surveyFactory;
+    SurveyQueryRepository surveyQueryRepository;
 
     @Override
     public SurveyInfo getSurvey(String id) {
@@ -81,13 +84,11 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     public Page<SurveyShortInfo> getSurveyPage(Integer page, Integer size, List<String> topics) {
-        if (topics == null) {
-            return surveyRepository.findAll(PageRequest.of(page, size))
-                    .map(surveyFactory::createSurveyShortInfoFrom);
-        }
 
-        return surveyRepository.findBySurveyTopicsIn(topics, PageRequest.of(page, size))
-                .map(surveyFactory::createSurveyShortInfoFrom);
+        AdditionalRespondentDetails details = (AdditionalRespondentDetails) userRepository.getCurrentUser()
+                .getAdditionalDetails();
+
+        return surveyQueryRepository.findSurveyByTopics(topics, PageRequest.of(page, size), details).map(surveyFactory::createSurveyShortInfoFrom);
     }
 
     @Override

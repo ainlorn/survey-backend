@@ -16,6 +16,7 @@ public class QueryUtils {
 
         int age = Period.between(details.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
         int income = details.getIncome();
+
         return new Criteria().andOperator(
                 notExistsOr(Criteria.where("respondentRestrictions.minAge").lte(age)),
                 notExistsOr(Criteria.where("respondentRestrictions.maxAge").gte(age)),
@@ -41,4 +42,5 @@ public class QueryUtils {
                 criteria
         );
     }
+
 }

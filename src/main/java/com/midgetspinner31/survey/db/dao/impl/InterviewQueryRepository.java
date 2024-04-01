@@ -8,18 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class InterviewQueryRepository {
+public class InterviewQueryRepository extends AbstractQueryRepository<Interview> {
 
-    private final MongoTemplate mongoTemplate;
-
-    public InterviewQueryRepository(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    protected InterviewQueryRepository(MongoTemplate mongoTemplate) {
+        super(mongoTemplate);
     }
 
     /**
@@ -41,9 +38,5 @@ public class InterviewQueryRepository {
 
     }
 
-    private Page<Interview> getPage(Query query, PageRequest pageRequest) {
-        return PageableExecutionUtils.getPage(mongoTemplate.find(query, Interview.class), pageRequest,
-                () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), Interview.class));
-    }
 }
 
