@@ -1,6 +1,7 @@
 package com.midgetspinner31.survey.db.utils;
 
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.time.LocalDate;
@@ -29,13 +30,21 @@ public class QueryUtils {
         );
     }
 
-    private static Criteria notExistsOr(Criteria criteria) {
+    private static Criteria notExistsOr(@NotNull Criteria criteria) {
+        if (criteria.getKey() == null) {
+            throw new NullPointerException("Не указан ключ в Criteria");
+        }
+
         return new Criteria().orOperator(
                 Criteria.where(criteria.getKey()).exists(false),
                 criteria);
     }
 
-    private static Criteria notExistsOrEmptyArrayOr(Criteria criteria) {
+    private static Criteria notExistsOrEmptyArrayOr(@NotNull Criteria criteria) {
+        if (criteria.getKey() == null) {
+            throw new NullPointerException("Не указан ключ в Criteria");
+        }
+
         return new Criteria().orOperator(
                 Criteria.where(criteria.getKey()).exists(false),
                 Criteria.where(criteria.getKey()).size(0),
