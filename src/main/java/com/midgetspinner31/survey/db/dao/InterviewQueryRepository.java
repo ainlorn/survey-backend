@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-public interface InterviewQueryRepostiory {
+public interface InterviewQueryRepository {
 
     Page<Interview> findInterviewsByInterviewTopics(List<String> interviewTopics,
                                                     PageRequest pageRequest, AdditionalRespondentDetails details);

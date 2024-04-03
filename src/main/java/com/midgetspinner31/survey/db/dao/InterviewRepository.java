@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface InterviewRepository extends MongoRepository<Interview, String>, InterviewQueryRepostiory {
+public interface InterviewRepository extends MongoRepository<Interview, String>, InterviewQueryRepository {
     Interview getById(String id);
 
     List<Interview> findAllByCreatorId(String creatorId);
