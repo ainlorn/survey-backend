@@ -143,8 +143,12 @@ public class InterviewServiceImpl implements InterviewService {
 
         AdditionalRespondentDetails details = (AdditionalRespondentDetails) userRepository.getCurrentUser().getAdditionalDetails();
 
-        return interviewRepository.findInterviewsByInterviewTopics(topics, PageRequest.of(page, size), details)
-                .map(interviewFactory::createInterviewInfoFrom);
+        try {
+            return interviewRepository.findInterviewsByInterviewTopics(topics, PageRequest.of(page, size), details)
+                    .map(interviewFactory::createInterviewInfoFrom);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getStackTrace().toString());
+        }
     }
 
     @Override
