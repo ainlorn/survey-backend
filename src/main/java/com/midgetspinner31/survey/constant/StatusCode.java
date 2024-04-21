@@ -42,8 +42,8 @@ public enum StatusCode {
     INTERVIEW_SLOT_INVALID_TIME(304, 400, "Некорректное время слота"),
 
     //wallet
-    WALLET_NOT_FOUND(200, 404, "Для пользователя не найдено кошельков"),
-    WALLET_LOW_BALANCE(400, 400, "Недостаточно средств на кошельке");
+    WALLET_NOT_FOUND(400, 404, "Для пользователя не найдено кошельков"),
+    WALLET_LOW_BALANCE(401, 400, "Недостаточно средств на кошельке");
 
 
     int code;
