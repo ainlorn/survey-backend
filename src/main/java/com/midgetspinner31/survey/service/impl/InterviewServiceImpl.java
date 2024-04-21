@@ -12,6 +12,7 @@ import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.InterviewFactory;
 import com.midgetspinner31.survey.service.InterviewService;
 import com.midgetspinner31.survey.service.RespondentService;
+import com.midgetspinner31.survey.service.WalletService;
 import com.midgetspinner31.survey.web.request.InterviewRequest;
 import com.midgetspinner31.survey.web.request.InterviewSlotRequest;
 import lombok.AccessLevel;
@@ -23,6 +24,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +38,11 @@ public class InterviewServiceImpl implements InterviewService {
     InterviewSlotRepository interviewSlotRepository;
     InterviewFactory interviewFactory;
 
+    WalletService walletService;
     RespondentService respondentService;
+
+    //Stub
+    private static final BigDecimal SUBTRACT_AMOUNT = new BigDecimal(200);
 
     @Override
     public InterviewInfo getInterview(String id) {
@@ -48,6 +54,9 @@ public class InterviewServiceImpl implements InterviewService {
     @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public InterviewInfo createInterview(InterviewRequest interviewRequest) {
         var user = userRepository.getCurrentUser();
+        if (!walletService.canSubtractMoneyFromUserWallet(user.getId(), SUBTRACT_AMOUNT)) {
+            throw new LowBalanceException();
+        }
         var interviewInfo = interviewFactory.createInterviewInfoFrom(user.getId(), interviewRequest);
         var interview = interviewFactory.createInterviewFrom(interviewInfo);
 
@@ -57,6 +66,7 @@ public class InterviewServiceImpl implements InterviewService {
             throw new InterviewInvalidTimeException();
 
         interview = interviewRepository.save(interview);
+        walletService.subtractMoneyFromUserWallet(user.getId(), SUBTRACT_AMOUNT);
         return interviewFactory.createInterviewInfoFrom(interview);
     }
 

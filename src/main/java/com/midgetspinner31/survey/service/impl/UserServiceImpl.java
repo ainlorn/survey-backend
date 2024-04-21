@@ -12,6 +12,7 @@ import com.midgetspinner31.survey.exception.PhoneInUseException;
 import com.midgetspinner31.survey.exception.UserNotFoundException;
 import com.midgetspinner31.survey.factory.UserFactory;
 import com.midgetspinner31.survey.service.UserService;
+import com.midgetspinner31.survey.service.WalletService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserFactory userFactory;
+    WalletService walletService;
 
     @Override
     public UserInfo signUp(UserSignUpInfo signUpInfo) {
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserService {
             throw new PhoneInUseException();
 
         var user = userRepository.save(userFactory.createUserFrom(signUpInfo));
+        walletService.createWalletForUser(user.getId());
+
         return userFactory.createUserInfoFrom(user);
     }
 

@@ -1,7 +1,6 @@
 package com.midgetspinner31.survey.db.entity;
 
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalUserDetails;
-import com.midgetspinner31.survey.dto.UserInfo;
 import com.midgetspinner31.survey.enumerable.AccountType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

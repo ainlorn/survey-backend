@@ -14,6 +14,7 @@ import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
 import com.midgetspinner31.survey.service.RespondentService;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
 import com.midgetspinner31.survey.service.SurveyService;
+import com.midgetspinner31.survey.service.WalletService;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +45,9 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     SurveyService surveyService;
     FileExporter fileExporter;
     RespondentService respondentService;
+    WalletService walletService;
+
+    private static final BigDecimal MONETARY_REWARD = new BigDecimal(5);
 
     @Override
     @PreAuthorize("@respondentService.isRespondent()")
@@ -62,6 +67,11 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
 
         SurveyAnswer surveyAnswer = surveyAnswerFactory.createSurveyAnswerFrom(surveyAnswerInfo);
         surveyAnswer = surveyAnswerRepository.save(surveyAnswer);
+
+        //TODO: Разработка SurveyRewardService, в котором пользователю начисляются деньги,
+        // А из опросов вычитается количество доступных прохождений
+        walletService.addMoneyToUserWallet(user.getId(), MONETARY_REWARD);
+
         return surveyAnswerFactory.createSurveyAnswerInfoFrom(surveyAnswer);
     }
 
