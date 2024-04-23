@@ -41,10 +41,14 @@ public enum StatusCode {
     INTERVIEW_SLOT_ENDED(303, 400, "Регистрация на слот интервью закончилась"),
     INTERVIEW_SLOT_INVALID_TIME(304, 400, "Некорректное время слота"),
 
-    //wallet
+    // wallet
     WALLET_NOT_FOUND(400, 404, "Для пользователя не найдено кошельков"),
-    WALLET_LOW_BALANCE(401, 400, "Недостаточно средств на кошельке");
+    WALLET_LOW_BALANCE(401, 400, "Недостаточно средств на кошельке"),
 
+    // rating
+    RATING_NOT_ALLOWED(500, 403, "Текущий пользователь не может оценить данное интервью"),
+    RATING_TOO_EARLY(501, 400, "Нельзя оценить данное интервью, потому что оно ещё не закончилось"),
+    RATING_NOT_FOUND(502, 404, "Оценка не найдена");
 
     int code;
     int httpCode;

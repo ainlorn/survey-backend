@@ -1,10 +1,13 @@
 package com.midgetspinner31.survey.web.controller;
 
 import com.midgetspinner31.survey.service.InterviewService;
+import com.midgetspinner31.survey.service.RatingService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.request.InterviewRequest;
 import com.midgetspinner31.survey.web.request.InterviewSlotRequest;
+import com.midgetspinner31.survey.web.request.RatingRequest;
 import com.midgetspinner31.survey.web.response.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
@@ -19,6 +22,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class InterviewController {
     InterviewService interviewService;
+    RatingService ratingService;
 
     /**
      * Создать интервью
@@ -35,7 +39,7 @@ public class InterviewController {
      */
     @PatchMapping("/interviews/{interviewId}")
     public InterviewResponse updateInterview(@PathVariable String interviewId,
-                                             @RequestBody InterviewRequest request) {
+                                             @RequestBody @Valid InterviewRequest request) {
         return new InterviewResponse(interviewService.updateInterview(interviewId, request));
     }
 
@@ -72,7 +76,7 @@ public class InterviewController {
      */
     @PostMapping("/interviews/{interviewId}/slots")
     public InterviewSlotListResponse createInterviewSlots(@PathVariable String interviewId,
-                                                          @RequestBody InterviewSlotRequest request) {
+                                                          @RequestBody @Valid InterviewSlotRequest request) {
         return new InterviewSlotListResponse(interviewService.createSlots(interviewId, request));
     }
 
@@ -82,9 +86,28 @@ public class InterviewController {
      */
     @DeleteMapping("/interviews/{interviewId}/slots/{slotId}")
     public EmptyResponse deleteInterviewSlot(@PathVariable String interviewId,
-                                                          @PathVariable String slotId) {
+                                             @PathVariable String slotId) {
         interviewService.deleteSlot(slotId);
         return new EmptyResponse();
+    }
+
+    /**
+     * Получить оценку текущего пользователя по данному слоту интервью
+     */
+    @GetMapping("/interviews/{interviewId}/slots/{slotId}/rating")
+    public RatingResponse getSlotRating(@PathVariable String interviewId,
+                                        @PathVariable String slotId) {
+        return new RatingResponse(ratingService.getRating(slotId));
+    }
+
+    /**
+     * Оценить противоположного участника интервью (создатель -> респондент, респондент -> создатель)
+     */
+    @PostMapping("/interviews/{interviewId}/slots/{slotId}/rating")
+    public RatingResponse rateSlot(@PathVariable String interviewId,
+                                   @PathVariable String slotId,
+                                   @RequestBody @Valid RatingRequest request) {
+        return new RatingResponse(ratingService.rate(slotId, request));
     }
 
     /**

@@ -4,15 +4,23 @@ import com.midgetspinner31.survey.db.entity.Interview;
 import com.midgetspinner31.survey.db.entity.InterviewSlot;
 import com.midgetspinner31.survey.dto.InterviewInfo;
 import com.midgetspinner31.survey.dto.InterviewSlotInfo;
+import com.midgetspinner31.survey.service.RatingService;
 import com.midgetspinner31.survey.web.request.InterviewRequest;
 import com.midgetspinner31.survey.web.request.InterviewSlotRequest;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class InterviewFactory {
+    RatingService ratingService;
+
     public Interview createInterviewFrom(InterviewInfo interviewInfo) {
         return Interview.builder()
                 .name(interviewInfo.getName())
@@ -33,6 +41,7 @@ public class InterviewFactory {
                 interview.getDescription(),
                 interview.getInterviewTopics(),
                 interview.getCreatorId(),
+                ratingService.getUserAverageRating(interview.getCreatorId()),
                 interview.getCreationDate(),
                 interview.getStartDate(),
                 interview.getEndDate(),
@@ -47,6 +56,7 @@ public class InterviewFactory {
                 interviewRequest.getDescription(),
                 interviewRequest.getInterviewTopics(),
                 creatorId,
+                ratingService.getUserAverageRating(creatorId),
                 new Date(),
                 interviewRequest.getStartDate(),
                 interviewRequest.getEndDate(),
@@ -68,6 +78,9 @@ public class InterviewFactory {
                 interviewSlot.getId(),
                 interviewSlot.getInterviewId(),
                 interviewSlot.getRespondentId(),
+                interviewSlot.getRespondentId() == null
+                        ? null
+                        : ratingService.getUserAverageRating(interviewSlot.getRespondentId()),
                 interviewSlot.getStartDate(),
                 interviewSlot.getEndDate()
         );
@@ -84,6 +97,7 @@ public class InterviewFactory {
         return new InterviewSlotInfo(
                 null,
                 interviewId,
+                null,
                 null,
                 slotItem.getStartDate(),
                 slotItem.getEndDate()

@@ -3,6 +3,7 @@ package com.midgetspinner31.survey.factory;
 import com.midgetspinner31.survey.db.entity.User;
 import com.midgetspinner31.survey.dto.UserSignUpInfo;
 import com.midgetspinner31.survey.dto.UserInfo;
+import com.midgetspinner31.survey.service.RatingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserFactory {
+    RatingService ratingService;
     PasswordEncoder passwordEncoder;
 
     public UserInfo createUserInfoFrom(User user) {
@@ -21,7 +23,8 @@ public class UserFactory {
                 user.getAccountType(),
                 user.getEmail(),
                 user.getPhoneNumber(),
-                user.getAdditionalDetails()
+                user.getAdditionalDetails(),
+                ratingService.getUserAverageRating(user.getId())
         );
     }
 

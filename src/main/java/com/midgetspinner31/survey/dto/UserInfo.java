@@ -16,4 +16,5 @@ public class UserInfo {
     String email;
     String phoneNumber;
     AdditionalUserDetails additionalDetails;
+    Double rating;
 }

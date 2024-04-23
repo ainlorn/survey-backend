@@ -18,6 +18,7 @@ public class InterviewInfo {
     String description;
     List<String> interviewTopics;
     String creatorId;
+    Double creatorRating;
     Date creationDate;
     Date startDate;
     Date endDate;
