@@ -5,9 +5,11 @@ import com.midgetspinner31.survey.db.dao.UserRepository;
 import com.midgetspinner31.survey.db.dao.WalletRepository;
 import com.midgetspinner31.survey.db.entity.Wallet;
 import com.midgetspinner31.survey.dto.WalletInfo;
+import com.midgetspinner31.survey.dto.WalletTransactionInfo;
 import com.midgetspinner31.survey.exception.WalletNotFoundException;
 import com.midgetspinner31.survey.factory.WalletFactory;
 import com.midgetspinner31.survey.service.WalletService;
+import com.midgetspinner31.survey.service.WalletTransactionService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Transactional
@@ -26,7 +29,7 @@ public class WalletServiceImpl implements WalletService {
 
     WalletRepository walletRepository;
     WalletFactory walletFactory;
-
+    WalletTransactionService walletTransactionService;
     UserRepository userRepository;
 
     @Override
@@ -74,6 +77,28 @@ public class WalletServiceImpl implements WalletService {
         return canSubtractMoneyFromWallet(wallet, amount);
     }
 
+    @Override
+    public void makeCreditPayment(String userId, String payerId, BigDecimal amount, String reason) {
+        Wallet wallet = getWalletForUser(userId);
+        addMoneyToWallet(wallet, amount);
+        walletTransactionService.addCreditTransactionTo(wallet, amount, payerId, userId, reason);
+    }
+
+    @Override
+    public void makeDebitPayment(String userId, BigDecimal amount, String reason) {
+        Wallet wallet = getWalletForUser(userId);
+        subtractMoneyFromWallet(wallet, amount);
+        walletTransactionService.addDebitTransactionTo(wallet, amount, reason);
+    }
+
+    @Override
+    public WalletInfo makeDepositPayment(String userId, BigDecimal amount, String reason) {
+        Wallet wallet = getWalletForUser(userId);
+        addMoneyToWallet(wallet, amount);
+        walletTransactionService.addDepositTransactionTo(wallet, amount, reason);
+        return walletFactory.createWalletInfoFrom(wallet);
+    }
+
     private BigDecimal addMoneyToWallet(@NotNull Wallet wallet, BigDecimal amount) {
         wallet.setBalance(wallet.getBalance().add(amount));
 
@@ -98,5 +123,10 @@ public class WalletServiceImpl implements WalletService {
         subtractMoneyFromWallet(wallet, amount);
 
         return walletFactory.createWalletInfoFrom(wallet);
+    }
+
+    @Override
+    public List<WalletTransactionInfo> getWalletTransactionsForCurrentUser() {
+        return getWalletForCurrentUser().getTransactions();
     }
 }

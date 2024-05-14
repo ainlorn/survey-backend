@@ -58,6 +58,14 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
         if (!respondentService.currentUserMatchesRestrictions(surveyInfo.getRespondentRestrictions()))
             throw new RespondentRestrictionsNotMatchedException();
 
+        //TODO: вынести в Survey reward service
+        walletService.makeCreditPayment(
+                user.getId(),
+                surveyInfo.getCreatorId(),
+                MONETARY_REWARD,
+                String.format("Начисление средств за прохождение опроса '%s'", surveyInfo.getName())
+        );
+
         SurveyAnswerInfo surveyAnswerInfo =
                 surveyAnswerFactory.createSurveyAnswerInfoFrom(user.getId(), surveyInfo, surveyAnswerRequest);
 
@@ -67,10 +75,6 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
 
         SurveyAnswer surveyAnswer = surveyAnswerFactory.createSurveyAnswerFrom(surveyAnswerInfo);
         surveyAnswer = surveyAnswerRepository.save(surveyAnswer);
-
-        //TODO: Разработка SurveyRewardService, в котором пользователю начисляются деньги,
-        // А из опросов вычитается количество доступных прохождений
-        walletService.addMoneyToUserWallet(user.getId(), MONETARY_REWARD);
 
         return surveyAnswerFactory.createSurveyAnswerInfoFrom(surveyAnswer);
     }

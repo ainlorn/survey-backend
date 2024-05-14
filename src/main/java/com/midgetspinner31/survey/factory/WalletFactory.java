@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 
 @Component
@@ -15,10 +16,13 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WalletFactory {
 
+    private WalletTransactionFactory walletTransactionFactory;
+
     public Wallet createWalletFrom(String userId) {
         return Wallet.builder()
                 .balance(BigDecimal.ZERO)
                 .userId(userId)
+                .transactions(new ArrayList<>())
                 .build();
     }
 
@@ -26,6 +30,7 @@ public class WalletFactory {
         return Wallet.builder()
                 .balance(balance)
                 .userId(userId)
+                .transactions(new ArrayList<>())
                 .build();
     }
 
@@ -33,6 +38,10 @@ public class WalletFactory {
         return WalletInfo.builder()
                 .id(wallet.getId())
                 .balance(wallet.getBalance())
+                .transactions(wallet.getTransactions().stream()
+                        .map(walletTransactionFactory::createWalletTransactionInfoFrom)
+                        .toList()
+                )
                 .build();
     }
 }

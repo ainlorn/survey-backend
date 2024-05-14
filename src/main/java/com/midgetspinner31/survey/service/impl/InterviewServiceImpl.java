@@ -66,7 +66,12 @@ public class InterviewServiceImpl implements InterviewService {
             throw new InterviewInvalidTimeException();
 
         interview = interviewRepository.save(interview);
-        walletService.subtractMoneyFromUserWallet(user.getId(), SUBTRACT_AMOUNT);
+        //TODO: Survey reward service
+        walletService.makeDebitPayment(
+                user.getId(),
+                SUBTRACT_AMOUNT,
+                String.format("Списание средств за создание интервью '%s'", interview.getName())
+        );
         return interviewFactory.createInterviewInfoFrom(interview);
     }
 

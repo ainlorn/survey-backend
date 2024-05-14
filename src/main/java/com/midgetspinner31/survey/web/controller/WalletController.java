@@ -5,6 +5,7 @@ import com.midgetspinner31.survey.dto.WalletInfo;
 import com.midgetspinner31.survey.service.WalletService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.response.WalletInfoResponse;
+import com.midgetspinner31.survey.web.response.WalletTransactionInfoResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -45,6 +46,14 @@ public class WalletController {
      */
     @PostMapping("/wallet/test/add")
     public WalletInfo addMoneyToUser(@RequestParam String userId, @RequestParam BigDecimal amount) {
-        return walletService.addMoneyToUserWallet(userId, amount);
+        return walletService.makeDepositPayment(userId, amount, "Пополнение кошелька");
+    }
+
+    /**
+     * Получить транзакции пользователя
+     */
+    @GetMapping("/wallet/transactions")
+    public WalletTransactionInfoResponse getCurrentWalletTransactions() {
+        return new WalletTransactionInfoResponse(walletService.getWalletTransactionsForCurrentUser());
     }
 }
