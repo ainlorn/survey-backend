@@ -1,10 +1,11 @@
 package com.midgetspinner31.survey.dto;
 
+import com.midgetspinner31.survey.enumerable.TransactionType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,8 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class WalletInfo {
-    String id;
-    BigDecimal balance;
-    List<WalletTransactionInfo> transactions;
+public class WalletTransactionInfo {
+
+    TransactionType type;
+    BigDecimal amount;
+    LocalDateTime createdAt;
+
+    String reason;
 }

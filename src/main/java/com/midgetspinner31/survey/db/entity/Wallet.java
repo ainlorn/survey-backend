@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Document("wallets")
 @Getter
@@ -28,4 +29,7 @@ public class Wallet {
     @Field(value = "balance", targetType = FieldType.DECIMAL128)
     @NotNull
     BigDecimal balance;
+
+    @Field(value = "transactions")
+    List<WalletTransaction> transactions;
 }

@@ -71,7 +71,12 @@ public class SurveyServiceImpl implements SurveyService {
         }
         Survey survey = surveyFactory.createSurveyFrom(surveyDraftInfo);
         surveyRepository.save(survey);
-        walletService.subtractMoneyFromUserWallet(userId, SUBTRACT_AMOUNT);
+        //TODO: Survey Reward service
+        walletService.makeDebitPayment(
+                userId,
+                SUBTRACT_AMOUNT,
+                String.format("Снятие средств за создание опроса '%s'", survey.getName())
+        );
         return surveyFactory.createSurveyInfoFrom(survey);
     }
 
