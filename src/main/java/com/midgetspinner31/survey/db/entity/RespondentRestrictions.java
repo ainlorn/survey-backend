@@ -41,4 +41,8 @@ public class RespondentRestrictions {
     @Min(0)
     @Max(10000000)
     Integer maxIncome;
+
+    @Min(0)
+    @Max(10)
+    Double minRating;
 }

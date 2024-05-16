@@ -1,5 +1,6 @@
 package com.midgetspinner31.survey.service.impl;
 
+import com.midgetspinner31.survey.db.dao.RatingRepository;
 import com.midgetspinner31.survey.db.dao.UserRepository;
 import com.midgetspinner31.survey.db.entity.RespondentRestrictions;
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
@@ -22,6 +23,7 @@ import java.time.temporal.ChronoUnit;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RespondentServiceImpl implements RespondentService {
     UserRepository userRepository;
+    RatingRepository ratingRepository;
 
     @Override
     @PreAuthorize("isAuthenticated()")
@@ -37,8 +39,8 @@ public class RespondentServiceImpl implements RespondentService {
 
     @Override
     public boolean currentUserMatchesRestrictions(RespondentRestrictions restrictions) {
-
-        AdditionalRespondentDetails details = getRespondentDetails();
+        var user = userRepository.getCurrentUser();
+        var details = getRespondentDetails();
 
         if (restrictions == null)
             return true;
@@ -82,6 +84,11 @@ public class RespondentServiceImpl implements RespondentService {
         if (restrictions.getMaxIncome() != null
                 && (details.getIncome() == null || details.getIncome() > restrictions.getMaxIncome()))
             return false;
+
+        var rating = ratingRepository.getAverageRatingForUser(user.getId());
+        if (restrictions.getMinRating() != null && rating < restrictions.getMinRating())
+            return false;
+
         return true;
     }
 }
