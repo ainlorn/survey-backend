@@ -3,7 +3,6 @@ package com.midgetspinner31.survey.db.dao.impl;
 import com.midgetspinner31.survey.db.dao.SurveyQueryRepository;
 import com.midgetspinner31.survey.db.entity.Survey;
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
-import com.midgetspinner31.survey.db.utils.QueryUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,7 +24,7 @@ public class SurveyQueryRepositoryImpl extends AbstractQueryRepository<Survey> i
 
         Query query = new Query().with(pageRequest);
 
-        query.addCriteria(QueryUtils.createRespondentRestrictionsCriteria(details));
+        query.addCriteria(Criteria.where("attemptsLeft").gte(1));
 
         if (topics != null && !topics.isEmpty()) {
             query.addCriteria(Criteria.where("survey_topics").in(topics));

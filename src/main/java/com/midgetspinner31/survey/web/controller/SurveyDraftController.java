@@ -62,9 +62,9 @@ public class SurveyDraftController {
      * @param draftId id черновика
      */
     @PatchMapping("/draft/{draftId}")
-    public SurveyResponse convertDraftToSurvey(@PathVariable String draftId) {
+    public SurveyResponse convertDraftToSurvey(@PathVariable String draftId, @RequestParam Integer attempts) {
         SurveyDraftInfo draft = surveyDraftService.getSurveyDraft(draftId);
-        SurveyInfo surveyInfo = surveyService.saveSurvey(draft);
+        SurveyInfo surveyInfo = surveyService.saveSurvey(draft, attempts);
         return new SurveyResponse(surveyInfo);
     }
 }

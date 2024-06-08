@@ -56,4 +56,9 @@ public class Survey {
      * Ограничения для отбора респондентов
      */
     RespondentRestrictions respondentRestrictions;
+
+    /**
+     * Количество доступных попыток для прохождения опроса
+     */
+    Integer attemptsLeft;
 }

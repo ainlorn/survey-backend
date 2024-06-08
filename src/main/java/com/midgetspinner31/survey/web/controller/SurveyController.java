@@ -2,6 +2,7 @@ package com.midgetspinner31.survey.web.controller;
 
 import com.midgetspinner31.survey.service.RespondentService;
 import com.midgetspinner31.survey.service.SurveyAnswerService;
+import com.midgetspinner31.survey.service.SurveyRewardService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.web.annotation.SurveyApiV1;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @SurveyApiV1
@@ -27,6 +29,7 @@ public class SurveyController {
     SurveyService surveyService;
     SurveyAnswerService surveyAnswerService;
     RespondentService respondentService;
+    SurveyRewardService surveyRewardService;
 
     /**
      * Cохранить опрос
@@ -144,11 +147,23 @@ public class SurveyController {
 
     /**
      * Получить информацию об ответе на опрос
+     *
      * @param surveyId id опроса
      * @param answerId id ответа
      */
     @GetMapping("/surveys/{surveyId}/answers/{answerId}")
     public SurveyAnswerResponse getSurveyAnswer(@PathVariable String surveyId, @PathVariable String answerId) {
         return new SurveyAnswerResponse(surveyAnswerService.getSurveyAnswer(surveyId, answerId));
+    }
+
+    /**
+     * Получить цену создания опроса
+     *
+     * @param attempts количество попыток
+     * @return цена создания опроса
+     */
+    @GetMapping("/surveys/calculate_price")
+    public BigDecimal getSurveyCreationPrice(@RequestParam Integer attempts) {
+        return surveyRewardService.getSurveyCreationPrice(attempts);
     }
 }

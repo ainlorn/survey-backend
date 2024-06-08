@@ -11,10 +11,7 @@ import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDeta
 import com.midgetspinner31.survey.dto.*;
 import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.SurveyAnswerFactory;
-import com.midgetspinner31.survey.service.RespondentService;
-import com.midgetspinner31.survey.service.SurveyAnswerService;
-import com.midgetspinner31.survey.service.SurveyService;
-import com.midgetspinner31.survey.service.WalletService;
+import com.midgetspinner31.survey.service.*;
 import com.midgetspinner31.survey.web.request.SurveyAnswerRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -26,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -46,8 +42,7 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
     FileExporter fileExporter;
     RespondentService respondentService;
     WalletService walletService;
-
-    private static final BigDecimal MONETARY_REWARD = new BigDecimal(5);
+    SurveyRewardService surveyRewardService;
 
     @Override
     @PreAuthorize("@respondentService.isRespondent()")
@@ -58,11 +53,13 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
         if (!respondentService.currentUserMatchesRestrictions(surveyInfo.getRespondentRestrictions()))
             throw new RespondentRestrictionsNotMatchedException();
 
-        //TODO: вынести в Survey reward service
+        if (surveyInfo.getAttemptsLeft() < 1) {
+            throw new SurveyNotFoundException();
+        }
         walletService.makeCreditPayment(
                 user.getId(),
                 surveyInfo.getCreatorId(),
-                MONETARY_REWARD,
+                surveyRewardService.getSurveyAnswerPublishPrice(),
                 String.format("Начисление средств за прохождение опроса '%s'", surveyInfo.getName())
         );
 
@@ -75,6 +72,8 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService {
 
         SurveyAnswer surveyAnswer = surveyAnswerFactory.createSurveyAnswerFrom(surveyAnswerInfo);
         surveyAnswer = surveyAnswerRepository.save(surveyAnswer);
+
+        surveyService.subtractSurveyAttempt(surveyId);
 
         return surveyAnswerFactory.createSurveyAnswerInfoFrom(surveyAnswer);
     }

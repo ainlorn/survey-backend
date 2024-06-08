@@ -32,6 +32,7 @@ public enum StatusCode {
     SURVEY_ANSWER_NOT_FOUND(202, 404, "Ответ на опрос не найден"),
     QUESTION_NOT_FOUND(203, 404, "Вопрос не найден"),
     RESPONDENT_FIELD_INVALID(200, 400, "Некорректно указано одно из полей данных о респонденте"),
+    SURVEY_ATTEMPTS_EMPTY(204, 400, "Не указано количество попыток прохождения опроса"),
 
     // interview
     INTERVIEW_NOT_FOUND(300, 404, "Интервью не найдено"),

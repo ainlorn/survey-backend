@@ -30,4 +30,6 @@ public class SurveyInfo {
     List<QuestionInfo> questions;
 
     RespondentRestrictions respondentRestrictions;
+
+    Integer attemptsLeft;
 }

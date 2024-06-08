@@ -21,6 +21,7 @@ public class SurveyFactory {
                 .creationDate(surveyInfo.getCreationDate())
                 .questions(questions)
                 .respondentRestrictions(surveyInfo.getRespondentRestrictions())
+                .attemptsLeft(surveyInfo.getAttemptsLeft())
                 .build();
     }
     public Question createQuestionFrom(QuestionInfo questionInfo, Restrictions restrictions) {
@@ -58,11 +59,12 @@ public class SurveyFactory {
                 creatorId,
                 new Date(),
                 surveyRequest.getQuestions(),
-                surveyRequest.getRespondentRestrictions()
+                surveyRequest.getRespondentRestrictions(),
+                surveyRequest.getAttempts()
         );
     }
 
-    public Survey createSurveyFrom(SurveyDraftInfo surveyDraftInfo) {
+    public Survey createSurveyFrom(SurveyDraftInfo surveyDraftInfo, Integer attempts) {
         return Survey.builder()
                 .name(surveyDraftInfo.getName())
                 .description(surveyDraftInfo.getDescription())
@@ -72,6 +74,7 @@ public class SurveyFactory {
                 .creationDate(new Date())
                 .questions(createQuestionsFrom(surveyDraftInfo.getQuestions()))
                 .respondentRestrictions(surveyDraftInfo.getRespondentRestrictions())
+                .attemptsLeft(attempts)
                 .build();
     }
 
@@ -84,7 +87,8 @@ public class SurveyFactory {
                 survey.getCreatorId(),
                 survey.getCreationDate(),
                 survey.getQuestions().stream().map(Question::toQuestionInfo).toList(),
-                survey.getRespondentRestrictions()
+                survey.getRespondentRestrictions(),
+                survey.getAttemptsLeft()
         );
     }
 
