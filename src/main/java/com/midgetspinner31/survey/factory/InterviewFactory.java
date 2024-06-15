@@ -3,6 +3,7 @@ package com.midgetspinner31.survey.factory;
 import com.midgetspinner31.survey.db.entity.Interview;
 import com.midgetspinner31.survey.db.entity.InterviewSlot;
 import com.midgetspinner31.survey.dto.InterviewInfo;
+import com.midgetspinner31.survey.dto.InterviewSlotFullInfo;
 import com.midgetspinner31.survey.dto.InterviewSlotInfo;
 import com.midgetspinner31.survey.service.RatingService;
 import com.midgetspinner31.survey.web.request.InterviewRequest;
@@ -77,6 +78,20 @@ public class InterviewFactory {
         return new InterviewSlotInfo(
                 interviewSlot.getId(),
                 interviewSlot.getInterviewId(),
+                interviewSlot.getRespondentId(),
+                interviewSlot.getRespondentId() == null
+                        ? null
+                        : ratingService.getUserAverageRating(interviewSlot.getRespondentId()),
+                interviewSlot.getStartDate(),
+                interviewSlot.getEndDate()
+        );
+    }
+
+    public InterviewSlotFullInfo createInterviewSlotFullInfoFrom(Interview interview, InterviewSlot interviewSlot) {
+        return new InterviewSlotFullInfo(
+                interviewSlot.getId(),
+                interviewSlot.getInterviewId(),
+                createInterviewInfoFrom(interview),
                 interviewSlot.getRespondentId(),
                 interviewSlot.getRespondentId() == null
                         ? null

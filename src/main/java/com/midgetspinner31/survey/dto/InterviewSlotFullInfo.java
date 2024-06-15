@@ -4,16 +4,16 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InterviewSlotInfo {
-    String id;
+public class InterviewSlotFullInfo {
+    String slotId;
     String interviewId;
+    InterviewInfo interview;
     String respondentId;
     Double respondentRating;
     Date startDate;

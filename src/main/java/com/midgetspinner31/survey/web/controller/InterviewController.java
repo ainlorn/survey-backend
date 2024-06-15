@@ -135,6 +135,22 @@ public class InterviewController {
     }
 
     /**
+     * Получить список предстоящих слотов интервью.
+     */
+    @GetMapping("/me/slots/upcoming")
+    public InterviewSlotFullListResponse getUpcomingSlots() {
+        return new InterviewSlotFullListResponse(interviewService.getUpcomingSlots());
+    }
+
+    /**
+     * Получить список завершенных слотов интервью.
+     */
+    @GetMapping("/me/slots/finished")
+    public InterviewSlotFullListResponse getFinishedSlots() {
+        return new InterviewSlotFullListResponse(interviewService.getFinishedSlots());
+    }
+
+    /**
      * Получить список слотов, на которые записан текущий пользователь
      * (только для респондентов)
      */

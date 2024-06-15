@@ -7,7 +7,9 @@ import com.midgetspinner31.survey.db.entity.Interview;
 import com.midgetspinner31.survey.db.entity.InterviewSlot;
 import com.midgetspinner31.survey.db.entity.userdetails.AdditionalRespondentDetails;
 import com.midgetspinner31.survey.dto.InterviewInfo;
+import com.midgetspinner31.survey.dto.InterviewSlotFullInfo;
 import com.midgetspinner31.survey.dto.InterviewSlotInfo;
+import com.midgetspinner31.survey.enumerable.AccountType;
 import com.midgetspinner31.survey.exception.*;
 import com.midgetspinner31.survey.factory.InterviewFactory;
 import com.midgetspinner31.survey.service.InterviewService;
@@ -184,6 +186,44 @@ public class InterviewServiceImpl implements InterviewService {
         return slots.stream()
                 .map(interviewFactory::createInterviewSlotInfoFrom)
                 .toList();
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public List<InterviewSlotFullInfo> getUpcomingSlots() {
+        var user = userRepository.getCurrentUser();
+        List<InterviewSlot> slots;
+        if (user.getAccountType() == AccountType.respondent) {
+            slots = interviewSlotRepository.findAllByRespondentIdAndStartDateAfter(user.getId(), new Date());
+        } else if (user.getAccountType() == AccountType.survey_creator) {
+            var interviews = interviewRepository.findAllByCreatorId(user.getId());
+            slots = interviewSlotRepository.findAllByInterviewIdInAndStartDateAfterAndRespondentIdIsNotNull(
+                    interviews.stream().map(Interview::getId).toList(), new Date());
+        } else {
+            throw new IllegalStateException();
+        }
+        return slots.stream()
+                .map((x) -> interviewFactory.createInterviewSlotFullInfoFrom(
+                        interviewRepository.getById(x.getInterviewId()), x)).toList();
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public List<InterviewSlotFullInfo> getFinishedSlots() {
+        var user = userRepository.getCurrentUser();
+        List<InterviewSlot> slots;
+        if (user.getAccountType() == AccountType.respondent) {
+            slots = interviewSlotRepository.findAllByRespondentIdAndEndDateBefore(user.getId(), new Date());
+        } else if (user.getAccountType() == AccountType.survey_creator) {
+            var interviews = interviewRepository.findAllByCreatorId(user.getId());
+            slots = interviewSlotRepository.findAllByInterviewIdInAndEndDateBeforeAndRespondentIdIsNotNull(
+                    interviews.stream().map(Interview::getId).toList(), new Date());
+        } else {
+            throw new IllegalStateException();
+        }
+        return slots.stream()
+                .map((x) -> interviewFactory.createInterviewSlotFullInfoFrom(
+                        interviewRepository.getById(x.getInterviewId()), x)).toList();
     }
 
     @Override

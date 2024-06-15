@@ -1,6 +1,7 @@
 package com.midgetspinner31.survey.service;
 
 import com.midgetspinner31.survey.dto.InterviewInfo;
+import com.midgetspinner31.survey.dto.InterviewSlotFullInfo;
 import com.midgetspinner31.survey.dto.InterviewSlotInfo;
 import com.midgetspinner31.survey.web.request.InterviewRequest;
 import com.midgetspinner31.survey.web.request.InterviewSlotRequest;
@@ -30,6 +31,10 @@ public interface InterviewService {
     List<InterviewInfo> getInterviewsCreatedByCurrentUser();
 
     List<InterviewSlotInfo> getMySlots();
+
+    List<InterviewSlotFullInfo> getUpcomingSlots();
+
+    List<InterviewSlotFullInfo> getFinishedSlots();
 
     List<InterviewSlotInfo> getFreeSlotsForInterview(String interviewId);
 
