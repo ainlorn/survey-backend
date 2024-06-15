@@ -10,8 +10,10 @@ import com.midgetspinner31.survey.dto.SurveyDraftInfo;
 import com.midgetspinner31.survey.dto.SurveyInfo;
 import com.midgetspinner31.survey.dto.SurveyShortInfo;
 import com.midgetspinner31.survey.exception.LowBalanceException;
+import com.midgetspinner31.survey.exception.NoSurveyAttemptsException;
 import com.midgetspinner31.survey.exception.SurveyNotFoundException;
 import com.midgetspinner31.survey.factory.SurveyFactory;
+import com.midgetspinner31.survey.service.SurveyRewardService;
 import com.midgetspinner31.survey.service.SurveyService;
 import com.midgetspinner31.survey.service.WalletService;
 import com.midgetspinner31.survey.web.request.SurveyRequest;
@@ -24,7 +26,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -37,8 +38,7 @@ public class SurveyServiceImpl implements SurveyService {
     SurveyFactory surveyFactory;
     WalletService walletService;
 
-    // Stub
-    private static final BigDecimal SUBTRACT_AMOUNT = new BigDecimal(100);
+    SurveyRewardService surveyRewardService;
 
     @Override
     public SurveyInfo getSurvey(String id) {
@@ -49,9 +49,13 @@ public class SurveyServiceImpl implements SurveyService {
     @Override
     @PreAuthorize("@surveyCreatorService.isSurveyCreator()")
     public SurveyInfo saveSurvey(SurveyRequest surveyRequest) {
+        if (surveyRequest.getAttempts() == null || surveyRequest.getAttempts() < 1) {
+            throw new NoSurveyAttemptsException();
+        }
         User user = userRepository.getCurrentUser();
-        //TODO: Сравнивать с суммой которую закладывает создатель на количество прохождений
-        if (!walletService.canSubtractMoneyFromUserWallet(user.getId(), SUBTRACT_AMOUNT)) {
+
+        if (!surveyRewardService.canCreateSurvey(surveyRequest.getAttempts(),
+                walletService.getWalletForCurrentUser().getBalance())) {
             throw new LowBalanceException();
         }
         SurveyInfo surveyInfo = surveyFactory.createSurveyInfoFrom(user.getId(), surveyRequest);
@@ -59,22 +63,29 @@ public class SurveyServiceImpl implements SurveyService {
         Survey survey = surveyFactory.createSurveyFrom(surveyInfo, questions);
         survey = surveyRepository.save(survey);
 
-        walletService.subtractMoneyFromUserWallet(user.getId(), SUBTRACT_AMOUNT);
+        walletService.makeDebitPayment(
+                user.getId(),
+                surveyRewardService.getSurveyCreationPrice(surveyRequest.getAttempts()),
+                String.format("Снятие средств за создание опроса '%s'", survey.getName())
+        );
         return surveyFactory.createSurveyInfoFrom(survey);
     }
 
     @Override
-    public SurveyInfo saveSurvey(SurveyDraftInfo surveyDraftInfo) {
+    public SurveyInfo saveSurvey(SurveyDraftInfo surveyDraftInfo, Integer attempts) {
+        if (attempts == null || attempts < 1) {
+            throw new NoSurveyAttemptsException();
+        }
         String userId = userRepository.getCurrentUser().getId();
-        if (!walletService.canSubtractMoneyFromUserWallet(userId, SUBTRACT_AMOUNT)) {
+        if (!surveyRewardService.canCreateSurvey(attempts,
+                walletService.getWalletForCurrentUser().getBalance())) {
             throw new LowBalanceException();
         }
-        Survey survey = surveyFactory.createSurveyFrom(surveyDraftInfo);
+        Survey survey = surveyFactory.createSurveyFrom(surveyDraftInfo, attempts);
         surveyRepository.save(survey);
-        //TODO: Survey Reward service
         walletService.makeDebitPayment(
                 userId,
-                SUBTRACT_AMOUNT,
+                surveyRewardService.getSurveyCreationPrice(attempts),
                 String.format("Снятие средств за создание опроса '%s'", survey.getName())
         );
         return surveyFactory.createSurveyInfoFrom(survey);
@@ -116,5 +127,18 @@ public class SurveyServiceImpl implements SurveyService {
                 .stream()
                 .map(surveyFactory::createSurveyInfoFrom)
                 .toList();
+    }
+
+    @Override
+    public void subtractSurveyAttempt(String surveyId) {
+        Survey survey = surveyRepository.findById(surveyId).orElseThrow(SurveyNotFoundException::new);
+
+        Integer attemptsLeft = survey.getAttemptsLeft();
+
+        if (attemptsLeft < 1) {
+            throw new IllegalStateException(String.format("Невозможно вычесть количество попыток: %s", attemptsLeft));
+        }
+        survey.setAttemptsLeft(attemptsLeft - 1);
+        surveyRepository.save(survey);
     }
 }

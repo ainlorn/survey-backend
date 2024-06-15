@@ -5,7 +5,10 @@ import com.midgetspinner31.survey.db.entity.RespondentRestrictions;
 import com.midgetspinner31.survey.dto.QuestionInfo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -27,4 +30,6 @@ public class SurveyRequest extends BaseRequest {
     @Valid
     @NotNull
     RespondentRestrictions respondentRestrictions;
+
+    Integer attempts;
 }

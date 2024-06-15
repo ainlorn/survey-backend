@@ -13,7 +13,7 @@ public interface SurveyService {
 
     SurveyInfo saveSurvey(SurveyRequest surveyRequest);
 
-    SurveyInfo saveSurvey(SurveyDraftInfo surveyDraftInfo);
+    SurveyInfo saveSurvey(SurveyDraftInfo surveyDraftInfo, Integer attempts);
 
     String deleteSurvey(String id);
 
@@ -24,4 +24,6 @@ public interface SurveyService {
     Page<SurveyShortInfo> getSurveyPage(Integer page, Integer size, List<String> topics);
 
     List<SurveyInfo> getSurveysCreatedByCurrentUser();
+
+    void subtractSurveyAttempt(String surveyId);
 }
